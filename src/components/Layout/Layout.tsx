@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  Container,
-  CssBaseline,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Container, CssBaseline, Grid, makeStyles } from "@material-ui/core";
 import Sidebar from "./Sidebar";
 
 import TopAppBar from "./TopAppBar";
