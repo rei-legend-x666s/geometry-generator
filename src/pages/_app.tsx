@@ -1,7 +1,9 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Layout from "../components/Layout/Layout";
+import { ThemeProvider } from "../context/ThemeContext";
+import { CssBaseline } from "@material-ui/core";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -12,9 +14,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <ThemeProvider>
+      <CssBaseline />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </ThemeProvider>
   );
 }
 export default MyApp;

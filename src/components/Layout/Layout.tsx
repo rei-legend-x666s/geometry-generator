@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, CssBaseline, Grid, makeStyles } from "@material-ui/core";
+import { Container, Grid, makeStyles } from "@material-ui/core";
 import Sidebar from "./Sidebar";
 
 import TopAppBar from "./TopAppBar";
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
   },
   container: {
-    paddingTop: theme.spacing(4),
+    paddingTop: theme.spacing(10),
     paddingBottom: theme.spacing(4),
   },
 }));
@@ -35,7 +35,6 @@ const Layout = ({ children }: LayoutProps) => {
   };
   return (
     <div className={classes.root}>
-      <CssBaseline />
       <TopAppBar open={open} handleDrawerOpen={handleDrawerOpen} />
       <Sidebar open={open} handleDrawerClose={handleDrawerClose} />
       <main className={classes.content}>
