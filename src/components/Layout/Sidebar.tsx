@@ -1,34 +1,25 @@
+import { ChevronLeft } from "@mui/icons-material";
 import {
   Divider,
-  Drawer,
+  Drawer as MuiDrawer,
   IconButton,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
-  makeStyles,
-} from "@material-ui/core";
+  styled,
+  Toolbar,
+} from "@mui/material";
 import Link from "next/link";
-import clsx from "clsx";
-import { ChevronLeft } from "@material-ui/icons";
 import { useRouter } from "next/router";
 import { useState } from "react";
-
-import { drawerWidth } from "../../styles/theme";
 import { MENU_LIST_ITEMS } from "../../constants/menu-items";
+import { drawerWidth } from "../../styles/theme";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  toolbarIcon: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
-    ...theme.mixins.toolbar,
-  },
-  drawerPaper: {
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  "& .MuiDrawer-paper": {
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
@@ -36,36 +27,18 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-  },
-  drawerPaperClose: {
-    overflowX: "hidden",
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+    boxSizing: "border-box",
+    ...(!open && {
+      overflowX: "hidden",
+      transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      width: theme.spacing(7),
+      [theme.breakpoints.up("sm")]: {
+        width: theme.spacing(9),
+      },
     }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9),
-    },
-  },
-  list: {
-    padding: 0,
-  },
-
-  selected: {
-    backgroundColor: `${theme.palette.primary.light} !important`,
-  },
-  link: {
-    textDecoration: "none",
-  },
-  linkText: {
-    color: theme.palette.primary.light,
-  },
-  text: {
-    ...theme.typography.h6,
-  },
-  linkTextSelected: {
-    color: theme.palette.primary.contrastText,
   },
 }));
 
@@ -75,7 +48,6 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ open, handleDrawerClose }: SidebarProps) => {
-  const classes = useStyles();
   const router = useRouter();
   const initialSelection = MENU_LIST_ITEMS.findIndex(
     (e) => e.route === router.pathname
@@ -84,51 +56,36 @@ const Sidebar = ({ open, handleDrawerClose }: SidebarProps) => {
     initialSelection !== -1 ? initialSelection : 0
   );
   return (
-    <Drawer
-      variant="permanent"
-      classes={{
-        paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-      }}
-      open={open}
-    >
-      <div className={classes.toolbarIcon}>
+    <Drawer variant="permanent" open={open}>
+      <Toolbar
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          px: [1],
+        }}
+      >
         <IconButton onClick={handleDrawerClose}>
           <ChevronLeft />
         </IconButton>
-      </div>
+      </Toolbar>
       <Divider />
-      <List classes={{ root: classes.list }}>
+      <List>
         {MENU_LIST_ITEMS.map(({ name, Icon, route }, id) => (
           <Link href={route} key={id}>
-            <a className={classes.link}>
-              <ListItem
-                button
+            <a>
+              <ListItemButton
                 selected={id === selectedIndex}
                 onClick={() => setSelectIndex(id)}
-                classes={{ selected: classes.selected }}
               >
-                <ListItemIcon
-                  classes={{
-                    root:
-                      id === selectedIndex
-                        ? classes.linkTextSelected
-                        : classes.linkText,
-                  }}
-                >
+                <ListItemIcon>
                   <Icon />
                 </ListItemIcon>
                 <ListItemText
                   primary={name}
                   primaryTypographyProps={{ variant: "subtitle1" }}
-                  classes={{
-                    root:
-                      id === selectedIndex
-                        ? classes.linkTextSelected
-                        : classes.linkText,
-                    primary: classes.text,
-                  }}
                 />
-              </ListItem>
+              </ListItemButton>
             </a>
           </Link>
         ))}
