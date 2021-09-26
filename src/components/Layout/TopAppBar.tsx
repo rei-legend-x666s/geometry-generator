@@ -1,44 +1,34 @@
-import clsx from "clsx";
+import { Menu } from "@mui/icons-material";
 import {
-  AppBar,
+  AppBar as MuiAppBar,
+  AppBarProps as MuiAppBarProps,
   IconButton,
-  makeStyles,
+  styled,
   Toolbar,
   Typography,
-} from "@material-ui/core";
-import { Menu } from "@material-ui/icons";
-import React from "react";
-
+} from "@mui/material";
 import { drawerWidth } from "../../styles/theme";
 
-const useStyles = makeStyles((theme) => ({
-  toolbar: {
-    paddingRight: 24,
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
+interface AppBarProps extends MuiAppBarProps {
+  open?: boolean;
+}
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== "open",
+})<AppBarProps>(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(["width", "margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  menuButtonHidden: {
-    display: "none",
-  },
-  title: {
-    flexGrow: 1,
-  },
+  }),
 }));
 
 interface TopAppBarProps {
@@ -47,20 +37,18 @@ interface TopAppBarProps {
 }
 
 const TopAppBar = ({ open, handleDrawerOpen }: TopAppBarProps) => {
-  const classes = useStyles();
-
   return (
-    <AppBar
-      position="absolute"
-      className={clsx(classes.appBar, open && classes.appBarShift)}
-    >
-      <Toolbar className={classes.toolbar}>
+    <AppBar position="absolute" open={open}>
+      <Toolbar sx={{ paddingRight: 24 }}>
         <IconButton
           edge="start"
           color="inherit"
           aria-label="menu"
           onClick={handleDrawerOpen}
-          className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+          sx={{
+            marginRight: 36,
+            ...(open && { display: "none" }),
+          }}
         >
           <Menu />
         </IconButton>
@@ -69,7 +57,7 @@ const TopAppBar = ({ open, handleDrawerOpen }: TopAppBarProps) => {
           variant="h6"
           color="inherit"
           noWrap
-          className={classes.title}
+          sx={{ flexGrow: 1 }}
         >
           Geometry Generator
         </Typography>
