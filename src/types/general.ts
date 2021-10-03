@@ -6,3 +6,9 @@ export interface IMenuItem {
   Icon: OverridableComponent<SvgIconTypeMap>;
   route: string;
 }
+
+export interface IColumnProperties {
+  id: string;
+  name: string;
+  dataFormat: number | null;
+}

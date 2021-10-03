@@ -1,28 +1,27 @@
+import { Box, Grid, Paper } from "@mui/material";
 import type { NextPage } from "next";
+import ColumnPropertiesForm from "../components/ColumnPropertiesForm";
 import CustomHead from "../components/Head";
-import { Box, Paper } from "@material-ui/core";
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <>
       <CustomHead title="Home" />
       <Box width="100%">
-        <Paper elevation={3}>
-          <div>
-            <main>
-              <h1>Input From</h1>
-            </main>
-          </div>
-        </Paper>
-        <Paper elevation={3}>
-          <div>
-            <main>
-              <h1>Result View</h1>
-            </main>
-          </div>
-        </Paper>
+        <Grid item xs={12} sx={{ p: 2 }}>
+          <ColumnPropertiesForm />
+        </Grid>
+        <Grid item xs={12} sx={{ p: 2 }}>
+          <Paper elevation={3}>
+            <div>
+              <main>
+                <h1>Result View</h1>
+              </main>
+            </div>
+          </Paper>
+        </Grid>
       </Box>
-    </div>
+    </>
   );
 };
 

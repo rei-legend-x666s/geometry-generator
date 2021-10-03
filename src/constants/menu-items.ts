@@ -1,15 +1,15 @@
-import { Map } from "@mui/icons-material";
+import { Home, Map } from "@mui/icons-material";
 import { IMenuItem } from "../types/general";
-import { GIS } from "./routes";
+import { GIS, HOME } from "./routes";
 
 export const MENU_LIST_ITEMS: IMenuItem[] = [
   {
-    name: "Map",
-    Icon: Map,
-    route: GIS,
+    name: "Home",
+    Icon: Home,
+    route: HOME,
   },
   {
-    name: "Home",
+    name: "Map",
     Icon: Map,
     route: GIS,
   },
