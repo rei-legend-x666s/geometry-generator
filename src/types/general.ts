@@ -12,3 +12,8 @@ export interface IColumnProperties {
   name: string;
   dataFormat: number | null;
 }
+
+export interface IColumnDataFormat {
+  label: string;
+  value: number;
+}

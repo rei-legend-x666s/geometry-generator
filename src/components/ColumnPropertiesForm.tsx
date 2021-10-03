@@ -14,15 +14,19 @@ import {
   TextField,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { v4 as uuidV4 } from "uuid";
+import { COLUMN_FORMAT_LIST } from "../constants/column-format";
 import { NATURAL_NUMBER } from "../constants/regex-constant";
-import { IColumnProperties } from "../types/general";
+import { useColumnProperty } from "../context/ColumnPropertyProvider";
 import Title from "./Title";
 
 const ColumnPropertiesForm = () => {
-  const [columnProperties, setColumnProperties] = useState<IColumnProperties[]>(
-    [{ id: uuidV4(), name: "", dataFormat: null }]
-  );
+  const {
+    columnProperties,
+    addColumnProperties,
+    deleteColumnProperties,
+    clearColumnProperties,
+    handleChangeColumnProperty,
+  } = useColumnProperty();
 
   const [rowCount, setRowCount] = useState(1);
   const [isRowCountInputError, setIsRowCountInputError] = useState(false);
@@ -31,44 +35,6 @@ const ColumnPropertiesForm = () => {
     setIsRowCountInputError(!NATURAL_NUMBER.test(event.target.value));
     setRowCount(Number(event.target.value));
   };
-
-  const handleChangeColumnProperty =
-    (id: string, prop: keyof IColumnProperties) =>
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setColumnProperties(
-        columnProperties.map((columnProperties) =>
-          columnProperties.id === id
-            ? { ...columnProperties, [prop]: event.target.value }
-            : columnProperties
-        )
-      );
-    };
-
-  const addRow = () => {
-    setColumnProperties([
-      ...columnProperties,
-      { id: uuidV4(), name: "", dataFormat: null },
-    ]);
-  };
-
-  const deleteRow = (id: string) => {
-    setColumnProperties(columnProperties.filter((row) => row.id !== id));
-  };
-
-  const clearRows = () => {
-    setColumnProperties([{ id: uuidV4(), name: "", dataFormat: null }]);
-  };
-
-  const dataFormatList = [
-    {
-      label: "姓",
-      value: 0,
-    },
-    {
-      label: "名",
-      value: 1,
-    },
-  ];
 
   return (
     <Paper elevation={3} sx={{ p: 2 }}>
@@ -80,7 +46,7 @@ const ColumnPropertiesForm = () => {
             color="primary"
             startIcon={<Add />}
             sx={{ m: 1 }}
-            onClick={addRow}
+            onClick={addColumnProperties}
           >
             ADD
           </Button>
@@ -89,7 +55,7 @@ const ColumnPropertiesForm = () => {
             color="primary"
             startIcon={<Clear />}
             sx={{ m: 1 }}
-            onClick={clearRows}
+            onClick={clearColumnProperties}
           >
             CLEAR
           </Button>
@@ -154,7 +120,10 @@ const ColumnPropertiesForm = () => {
                       "dataFormat"
                     )}
                   >
-                    {dataFormatList.map((dataFormat) => (
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    {COLUMN_FORMAT_LIST.map((dataFormat) => (
                       <MenuItem key={dataFormat.value} value={dataFormat.value}>
                         {dataFormat.label}
                       </MenuItem>
@@ -165,7 +134,7 @@ const ColumnPropertiesForm = () => {
                   <IconButton
                     aria-label="delete"
                     color="primary"
-                    onClick={() => deleteRow(columnProperties.id)}
+                    onClick={() => deleteColumnProperties(columnProperties.id)}
                   >
                     <Delete />
                   </IconButton>
