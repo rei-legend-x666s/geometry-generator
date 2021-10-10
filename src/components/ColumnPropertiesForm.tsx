@@ -17,6 +17,7 @@ import { ChangeEvent, useState } from "react";
 import { COLUMN_FORMAT_LIST } from "../constants/column-format";
 import { NATURAL_NUMBER } from "../constants/regex-constant";
 import { useColumnProperty } from "../context/ColumnPropertyProvider";
+import { useDummyData } from "../context/DummyDataProvider";
 import Title from "./Title";
 
 const ColumnPropertiesForm = () => {
@@ -28,12 +29,18 @@ const ColumnPropertiesForm = () => {
     handleChangeColumnProperty,
   } = useColumnProperty();
 
+  const { createDummyDataRecords } = useDummyData();
+
   const [rowCount, setRowCount] = useState(1);
   const [isRowCountInputError, setIsRowCountInputError] = useState(false);
 
   const handleChangeRowCount = (event: ChangeEvent<HTMLInputElement>) => {
     setIsRowCountInputError(!NATURAL_NUMBER.test(event.target.value));
     setRowCount(Number(event.target.value));
+  };
+
+  const handleClickGenerate = () => {
+    createDummyDataRecords(columnProperties, rowCount);
   };
 
   return (
@@ -76,6 +83,7 @@ const ColumnPropertiesForm = () => {
             color="primary"
             startIcon={<PlayCircle />}
             sx={{ m: 1 }}
+            onClick={handleClickGenerate}
           >
             GENERATE
           </Button>
@@ -86,14 +94,14 @@ const ColumnPropertiesForm = () => {
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
-              <TableCell align="center">Row name</TableCell>
+              <TableCell align="center">Column name</TableCell>
               <TableCell align="center">Data format</TableCell>
               <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {columnProperties.map((columnProperties, idx) => (
-              <TableRow key={columnProperties.id}>
+            {columnProperties.map((columnProperty, idx) => (
+              <TableRow key={columnProperty.id}>
                 <TableCell component="th" scope="row">
                   {idx + 1}
                 </TableCell>
@@ -102,9 +110,9 @@ const ColumnPropertiesForm = () => {
                     placeholder="Row name"
                     variant="outlined"
                     size="small"
-                    value={columnProperties.name}
+                    value={columnProperty.name}
                     onChange={handleChangeColumnProperty(
-                      columnProperties.id,
+                      columnProperty.id,
                       "name"
                     )}
                   />
@@ -114,9 +122,9 @@ const ColumnPropertiesForm = () => {
                     select
                     size="small"
                     sx={{ minWidth: 240, textAlign: "left" }}
-                    value={columnProperties.dataFormat}
+                    value={columnProperty.dataFormat}
                     onChange={handleChangeColumnProperty(
-                      columnProperties.id,
+                      columnProperty.id,
                       "dataFormat"
                     )}
                   >
@@ -134,7 +142,7 @@ const ColumnPropertiesForm = () => {
                   <IconButton
                     aria-label="delete"
                     color="primary"
-                    onClick={() => deleteColumnProperties(columnProperties.id)}
+                    onClick={() => deleteColumnProperties(columnProperty.id)}
                   >
                     <Delete />
                   </IconButton>

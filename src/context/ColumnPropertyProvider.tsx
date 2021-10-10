@@ -19,7 +19,6 @@ type ColumnPropertyContextProps = {
   ) => (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
-// @ts-ignore
 const ColumnPropertyContext = createContext({} as ColumnPropertyContextProps);
 export const useColumnProperty = () => useContext(ColumnPropertyContext);
 
@@ -27,8 +26,8 @@ type ColumnPropertyProviderProps = {
   children: ReactNode;
 };
 
-const createInitColumnProperty = () => ({
-  id: uuidV4(),
+const createInitColumnProperty = (): IColumnProperties => ({
+  id: uuidV4().toString(),
   name: "",
   dataFormat: null,
 });

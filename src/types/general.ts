@@ -1,5 +1,6 @@
 import { SvgIconTypeMap } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { DATA_TYPE_VALUE } from "../constants/column-format";
 
 export interface IMenuItem {
   name: string;
@@ -10,10 +11,20 @@ export interface IMenuItem {
 export interface IColumnProperties {
   id: string;
   name: string;
-  dataFormat: number | null;
+  dataFormat: DATA_TYPE_VALUE | null;
 }
 
 export interface IColumnDataFormat {
   label: string;
   value: number;
+}
+
+export interface IDummyDataProps {
+  id: string;
+  data: string | number | null; // TODO: More strictly
+}
+
+export interface IDummyDataRecord {
+  id: string;
+  record: IDummyDataProps[];
 }
