@@ -28,3 +28,9 @@ export interface IDummyDataRecord {
   id: string;
   record: IDummyDataProps[];
 }
+
+export interface IDummyDataSet {
+  id: string;
+  columnPropsList: IColumnProperties[];
+  records: IDummyDataRecord[];
+}

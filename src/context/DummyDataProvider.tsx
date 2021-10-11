@@ -1,10 +1,14 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { createData } from "../functions/fakerData";
-import { IColumnProperties, IDummyDataRecord } from "../types/general";
+import {
+  IColumnProperties,
+  IDummyDataRecord,
+  IDummyDataSet,
+} from "../types/general";
 
 type DummyDataContextProps = {
-  dummyDataRecords: IDummyDataRecord[];
+  dummyDataSet: IDummyDataSet | undefined;
   createDummyDataRecords: (
     columnProperties: IColumnProperties[],
     rowCount: number
@@ -19,9 +23,7 @@ type DummyDataProviderProps = {
 };
 
 const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
-  const [dummyDataRecords, setDummyDataRecords] = useState<IDummyDataRecord[]>(
-    []
-  );
+  const [dummyDataSet, setDummyDataSet] = useState<IDummyDataSet>();
 
   const createDummyData = ({ id, dataFormat }: IColumnProperties) => ({
     id: id,
@@ -32,17 +34,21 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
     columnProperties: IColumnProperties[],
     rowCount: number
   ) => {
-    const createdDummyDataRecords = [...Array(rowCount)].map((_) => ({
+    const createdDummyDataRecords: IDummyDataRecord[] = [
+      ...Array(rowCount),
+    ].map((_) => ({
       id: uuidV4(),
       record: columnProperties.map(createDummyData),
     }));
-    setDummyDataRecords(createdDummyDataRecords);
+    setDummyDataSet({
+      id: uuidV4(),
+      columnPropsList: columnProperties,
+      records: createdDummyDataRecords,
+    });
   };
 
   return (
-    <DummyDataContext.Provider
-      value={{ dummyDataRecords, createDummyDataRecords }}
-    >
+    <DummyDataContext.Provider value={{ dummyDataSet, createDummyDataRecords }}>
       {children}
     </DummyDataContext.Provider>
   );

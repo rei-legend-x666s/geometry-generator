@@ -7,13 +7,11 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useColumnProperty } from "../context/ColumnPropertyProvider";
 import { useDummyData } from "../context/DummyDataProvider";
 import Title from "./Title";
 
 const DataViewTable = () => {
-  const { columnProperties } = useColumnProperty();
-  const { dummyDataRecords } = useDummyData();
+  const { dummyDataSet } = useDummyData();
 
   return (
     <Paper elevation={3} sx={{ p: 2 }}>
@@ -22,8 +20,7 @@ const DataViewTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>#</TableCell>
-              {columnProperties.map(({ id, name }) => (
+              {dummyDataSet?.columnPropsList.map(({ id, name }) => (
                 <TableCell key={id} align="center">
                   {name}
                 </TableCell>
@@ -31,12 +28,9 @@ const DataViewTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dummyDataRecords.map((dataRecord, idx) => (
+            {dummyDataSet?.records.map((dataRecord) => (
               <TableRow key={dataRecord.id}>
-                <TableCell component="th" scope="row">
-                  {idx + 1}
-                </TableCell>
-                {columnProperties.map((columnProp) => (
+                {dummyDataSet?.columnPropsList.map((columnProp) => (
                   <TableCell key={columnProp.id} align="center">
                     {dataRecord.record.find(
                       (dataProps) => dataProps.id === columnProp.id
@@ -44,7 +38,7 @@ const DataViewTable = () => {
                   </TableCell>
                 ))}
               </TableRow>
-            ))}
+            )) || ""}
           </TableBody>
         </Table>
       </TableContainer>
