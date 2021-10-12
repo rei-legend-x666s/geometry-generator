@@ -46,7 +46,7 @@ const TopAppBar = ({ open, handleDrawerOpen }: TopAppBarProps) => {
           aria-label="menu"
           onClick={handleDrawerOpen}
           sx={{
-            marginRight: 36,
+            marginRight: 4,
             ...(open && { display: "none" }),
           }}
         >
