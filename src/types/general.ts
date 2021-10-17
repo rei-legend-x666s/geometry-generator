@@ -34,3 +34,5 @@ export interface IDummyDataSet {
   columnPropsList: IColumnProperties[];
   records: IDummyDataRecord[];
 }
+
+export type Locale = "ja" | "en";

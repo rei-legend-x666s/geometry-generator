@@ -1,6 +1,5 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useRef, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
-import { createData } from "../functions/fakerData";
 import {
   IColumnProperties,
   IDummyDataRecord,
@@ -13,6 +12,10 @@ type DummyDataContextProps = {
     columnProperties: IColumnProperties[],
     rowCount: number
   ) => void;
+  setDummyDataInfo: (
+    columnProperties: IColumnProperties[],
+    dummyDataRecords: IDummyDataRecord[]
+  ) => void;
 };
 
 const DummyDataContext = createContext({} as DummyDataContextProps);
@@ -24,31 +27,40 @@ type DummyDataProviderProps = {
 
 const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
   const [dummyDataSet, setDummyDataSet] = useState<IDummyDataSet>();
+  const workerRef = useRef<Worker>();
 
-  const createDummyData = ({ id, dataFormat }: IColumnProperties) => ({
-    id: id,
-    data: createData(dataFormat),
-  });
+  // @ts-ignore
+  const onWorkerMessage = ({ data: { input, output } }) => {
+    setDummyDataInfo(input, output);
+  };
 
   const createDummyDataRecords = (
     columnProperties: IColumnProperties[],
     rowCount: number
   ) => {
-    const createdDummyDataRecords: IDummyDataRecord[] = [
-      ...Array(rowCount),
-    ].map((_) => ({
-      id: uuidV4(),
-      record: columnProperties.map(createDummyData),
-    }));
+    workerRef.current = new Worker(
+      new URL("../functions/createDataWorker", import.meta.url)
+    );
+    workerRef.current.onmessage = onWorkerMessage;
+
+    workerRef.current.postMessage({ columnProperties, rowCount });
+  };
+
+  const setDummyDataInfo = (
+    columnProperties: IColumnProperties[],
+    dummyDataRecords: IDummyDataRecord[]
+  ) => {
     setDummyDataSet({
       id: uuidV4(),
       columnPropsList: columnProperties,
-      records: createdDummyDataRecords,
+      records: dummyDataRecords,
     });
   };
 
   return (
-    <DummyDataContext.Provider value={{ dummyDataSet, createDummyDataRecords }}>
+    <DummyDataContext.Provider
+      value={{ dummyDataSet, createDummyDataRecords, setDummyDataInfo }}
+    >
       {children}
     </DummyDataContext.Provider>
   );
