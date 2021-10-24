@@ -2,8 +2,8 @@ import { NEW_LINE_CODE } from "../constants/utils";
 import { IColumnProperties, IDummyDataRecord } from "../types/general";
 
 interface IConvertCsvOptions {
-  needAddHead: boolean;
-  newLineCode: NEW_LINE_CODE;
+  needHeader: boolean;
+  newLineCode: string;
 }
 
 const convertCsvText = (
@@ -11,12 +11,12 @@ const convertCsvText = (
   dataRecords: IDummyDataRecord[],
   options?: Partial<IConvertCsvOptions>
 ) => {
-  const { needAddHead, newLineCode } = options
+  const { needHeader, newLineCode } = options
     ? options
-    : { needAddHead: false, newLineCode: NEW_LINE_CODE.LF };
+    : { needHeader: false, newLineCode: NEW_LINE_CODE.LF.code };
 
   const csvTextLines = [];
-  if (needAddHead) {
+  if (needHeader) {
     csvTextLines.push(columnProperties.map(({ name }) => name).join(","));
   }
   dataRecords.forEach(({ record }) => {
