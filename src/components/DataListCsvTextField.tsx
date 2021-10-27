@@ -43,9 +43,13 @@ const DataListCsvTextField = ({ dataSet }: DataListCsvTextFieldProps) => {
 
   const convertCsvTextValue = () => {
     const newLineCode = (NEW_LINE_CODE as any)[newLineCodeLabel].code;
-    const textData = dataSet?.columnPropsList && dataSet?.records
-      ? convertCsvText(dataSet.columnPropsList, dataSet.records, {needHeader, newLineCode})
-      : "";
+    const textData =
+      dataSet?.columnPropsList && dataSet?.records
+        ? convertCsvText(dataSet.columnPropsList, dataSet.records, {
+            needHeader,
+            newLineCode,
+          })
+        : "";
     setCsvText(textData);
   };
 

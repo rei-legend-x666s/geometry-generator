@@ -17,7 +17,7 @@ const DataViewTable = () => {
   return (
     <Paper elevation={3} sx={{ p: 2 }}>
       <Title>Result View</Title>
-      <Tabs value={tabIndex} onChange={handleChangeTabIndex}>
+      <Tabs value={tabIndex} onChange={handleChangeTabIndex} sx={{ p: 1 }}>
         <Tab value="table" label="table" />
         <Tab value="csv" label="csv" />
       </Tabs>

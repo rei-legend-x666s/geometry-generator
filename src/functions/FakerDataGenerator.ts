@@ -27,7 +27,18 @@ class FakerDataGenerator {
 
   createLastName = () => this.faker.name.lastName();
 
-  createData = (dataFormat: DATA_TYPE_VALUE | null) => {
+  createLatitude = (randomNumber: number) => {
+    return this.shiftRange(randomNumber, 10000000, 900000000) / 10000000;
+  };
+
+  createLongitude = (randomNumber: number) => {
+    return this.shiftRange(randomNumber, 10000000, 1800000000) / 10000000;
+  };
+
+  shiftRange = (num: number, min: number, max: number) =>
+    min + (Math.abs(num) % (max + 1 - min));
+
+  createData = (dataFormat: DATA_TYPE_VALUE | null, randomNumber: number) => {
     let data = null;
     switch (dataFormat) {
       case DATA_TYPE_VALUE.FIRST_NAME:
@@ -35,6 +46,12 @@ class FakerDataGenerator {
         break;
       case DATA_TYPE_VALUE.LAST_NAME:
         data = this.createLastName();
+        break;
+      case DATA_TYPE_VALUE.LATITUDE:
+        data = this.createLatitude(randomNumber);
+        break;
+      case DATA_TYPE_VALUE.LONGITUDE:
+        data = this.createLongitude(randomNumber);
         break;
     }
     return data;
