@@ -1,4 +1,3 @@
-import { createStyles, makeStyles } from "@mui/material";
 import * as ol from "ol";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import MapContext from "./MapContext";
@@ -10,7 +9,6 @@ interface MapProps {
 }
 
 const Map = ({ children, zoom, center }: MapProps) => {
-  // const classes = useStyle();
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<ol.Map>();
 
