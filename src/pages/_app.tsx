@@ -8,6 +8,7 @@ import type { AppProps } from "next/app";
 import Layout from "../components/Layout/Layout";
 import createEmotionCache from "../styles/createEmotionCache";
 import { lightTheme } from "../styles/theme";
+import "../styles/Map.css";
 
 const clientSideEmotionCache = createEmotionCache();
 
