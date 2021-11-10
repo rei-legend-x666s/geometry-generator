@@ -8,14 +8,13 @@ import {
 
 type DummyDataContextProps = {
   dummyDataSet: IDummyDataSet | undefined;
+  dummyDataSetList: IDummyDataSet[];
   createDummyDataRecords: (
     columnProperties: IColumnProperties[],
     rowCount: number
   ) => void;
-  setDummyDataInfo: (
-    columnProperties: IColumnProperties[],
-    dummyDataRecords: IDummyDataRecord[]
-  ) => void;
+  setViewDataSet: (id: string) => void;
+  removeDataSet: (id: string) => void;
 };
 
 const DummyDataContext = createContext({} as DummyDataContextProps);
@@ -27,11 +26,27 @@ type DummyDataProviderProps = {
 
 const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
   const [dummyDataSet, setDummyDataSet] = useState<IDummyDataSet>();
+  const [dummyDataSetList, setDummyDataSetList] = useState<IDummyDataSet[]>([]);
   const workerRef = useRef<Worker>();
 
   // @ts-ignore
   const onWorkerMessage = ({ data: { input, output } }) => {
-    setDummyDataInfo(input, output);
+    setDummyDataSetList([...dummyDataSetList, createNewDataSet(input, output)]);
+  };
+
+  const createNewDataSet = (
+    columnPropsList: IColumnProperties[] = [],
+    records: IDummyDataRecord[] = []
+  ) => {
+    return {
+      id: uuidV4(),
+      columnPropsList,
+      records,
+    };
+  };
+
+  const removeDataSet = (id: string) => {
+    setDummyDataSetList(dummyDataSetList.filter((d) => d.id != id));
   };
 
   const createDummyDataRecords = (
@@ -46,20 +61,22 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
     workerRef.current.postMessage({ columnProperties, rowCount });
   };
 
-  const setDummyDataInfo = (
-    columnProperties: IColumnProperties[],
-    dummyDataRecords: IDummyDataRecord[]
-  ) => {
-    setDummyDataSet({
-      id: uuidV4(),
-      columnPropsList: columnProperties,
-      records: dummyDataRecords,
-    });
+  const setViewDataSet = (id: string) => {
+    const dataSet = dummyDataSetList.find((d) => d.id === id);
+    if (dataSet) {
+      setDummyDataSet(dataSet);
+    }
   };
 
   return (
     <DummyDataContext.Provider
-      value={{ dummyDataSet, createDummyDataRecords, setDummyDataInfo }}
+      value={{
+        dummyDataSet,
+        dummyDataSetList,
+        createDummyDataRecords,
+        setViewDataSet,
+        removeDataSet,
+      }}
     >
       {children}
     </DummyDataContext.Provider>
