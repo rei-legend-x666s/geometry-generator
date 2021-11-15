@@ -57,8 +57,8 @@ const DataSetList = () => {
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
-              <TableCell align="center">Count</TableCell>
               <TableCell align="center">Showing</TableCell>
+              <TableCell align="center">Count</TableCell>
               <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
