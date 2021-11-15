@@ -28,11 +28,11 @@ class FakerDataGenerator {
   createLastName = () => this.faker.name.lastName();
 
   createLatitude = (randomNumber: number) => {
-    return this.shiftRange(randomNumber, 10000000, 900000000) / 10000000;
+    return this.shiftRange(randomNumber, -900000000, 900000000) / 10000000;
   };
 
   createLongitude = (randomNumber: number) => {
-    return this.shiftRange(randomNumber, 10000000, 1800000000) / 10000000;
+    return this.shiftRange(randomNumber, -1800000000, 1800000000) / 10000000;
   };
 
   shiftRange = (num: number, min: number, max: number) =>
