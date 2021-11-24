@@ -12,6 +12,13 @@ export interface IColumnProperties {
   id: string;
   name: string;
   dataFormat: DATA_TYPE_VALUE | null;
+  options: IDefaultColumnOptions | IGisColumnOptions;
+}
+
+export interface IDefaultColumnOptions {}
+
+export interface IGisColumnOptions {
+  range: number[];
 }
 
 export interface IColumnDataFormat {
