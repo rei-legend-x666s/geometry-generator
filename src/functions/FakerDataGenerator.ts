@@ -1,6 +1,6 @@
 import * as fakerLib from "faker";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
-import { Locale } from "../types/general";
+import { IColumnProperties, IGisColumnOptions, Locale } from "../types/general";
 
 export interface IFakerDataGeneratorOptions {
   randomSeed: number;
@@ -27,18 +27,27 @@ class FakerDataGenerator {
 
   createLastName = () => this.faker.name.lastName();
 
-  createLatitude = (randomNumber: number) => {
-    return this.shiftRange(randomNumber, -900000000, 900000000) / 10000000;
+  createLatitude = (randomNumber: number, { range }: IGisColumnOptions) => {
+    return (
+      this.shiftRange(randomNumber, range[0] * 10000000, range[1] * 10000000) /
+      10000000
+    );
   };
 
-  createLongitude = (randomNumber: number) => {
-    return this.shiftRange(randomNumber, -1800000000, 1800000000) / 10000000;
+  createLongitude = (randomNumber: number, { range }: IGisColumnOptions) => {
+    return (
+      this.shiftRange(randomNumber, range[0] * 10000000, range[1] * 10000000) /
+      10000000
+    );
   };
 
   shiftRange = (num: number, min: number, max: number) =>
     min + (Math.abs(num) % (max + 1 - min));
 
-  createData = (dataFormat: DATA_TYPE_VALUE | null, randomNumber: number) => {
+  createData = (
+    { dataFormat, options }: IColumnProperties,
+    randomNumber: number
+  ) => {
     let data = null;
     switch (dataFormat) {
       case DATA_TYPE_VALUE.FIRST_NAME:
@@ -48,10 +57,10 @@ class FakerDataGenerator {
         data = this.createLastName();
         break;
       case DATA_TYPE_VALUE.LATITUDE:
-        data = this.createLatitude(randomNumber);
+        data = this.createLatitude(randomNumber, options as IGisColumnOptions);
         break;
       case DATA_TYPE_VALUE.LONGITUDE:
-        data = this.createLongitude(randomNumber);
+        data = this.createLongitude(randomNumber, options as IGisColumnOptions);
         break;
     }
     return data;

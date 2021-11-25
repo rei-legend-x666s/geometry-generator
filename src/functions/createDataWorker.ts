@@ -10,9 +10,9 @@ worker.onmessage = ({ data: { columnProperties, rowCount } }) => {
   const randomGenerator = new RandomGenerator();
   const dummyDataInfo: IDummyDataRecord[] = [...Array(rowCount)].map((_) => ({
     id: uuidV4(),
-    record: columnProperties.map(({ id, dataFormat }: IColumnProperties) => ({
-      id,
-      data: fakerDataGenerator.createData(dataFormat, randomGenerator.next()),
+    record: columnProperties.map((columnProp: IColumnProperties) => ({
+      id: columnProp.id,
+      data: fakerDataGenerator.createData(columnProp, randomGenerator.next()),
     })),
   }));
   postMessage({ input: columnProperties, output: dummyDataInfo });
