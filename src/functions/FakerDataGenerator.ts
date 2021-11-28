@@ -1,6 +1,7 @@
 import * as fakerLib from "faker";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
 import { IColumnProperties, IGisColumnOptions, Locale } from "../types/general";
+import RandomGenerator from "./RandomGenerator";
 
 export interface IFakerDataGeneratorOptions {
   randomSeed: number;
@@ -9,9 +10,11 @@ export interface IFakerDataGeneratorOptions {
 
 class FakerDataGenerator {
   private faker: Faker.FakerStatic;
+  private randomGenerator: RandomGenerator;
 
   constructor(options?: Partial<IFakerDataGeneratorOptions>) {
     this.faker = fakerLib;
+    this.randomGenerator = new RandomGenerator();
     if (options) {
       const { randomSeed, locale } = options;
       if (randomSeed) {
@@ -27,27 +30,57 @@ class FakerDataGenerator {
 
   createLastName = () => this.faker.name.lastName();
 
-  createLatitude = (randomNumber: number, { range }: IGisColumnOptions) => {
+  createLatitude = (
+    randomNumber: number,
+    { range: { xMinMax } }: IGisColumnOptions
+  ) => {
     return (
-      this.shiftRange(randomNumber, range[0] * 10000000, range[1] * 10000000) /
-      10000000
+      this.shiftRange(
+        randomNumber,
+        xMinMax[0] * 10000000,
+        xMinMax[1] * 10000000
+      ) / 10000000
     );
   };
 
-  createLongitude = (randomNumber: number, { range }: IGisColumnOptions) => {
+  createLongitude = (
+    randomNumber: number,
+    { range: { yMinMax } }: IGisColumnOptions
+  ) => {
     return (
-      this.shiftRange(randomNumber, range[0] * 10000000, range[1] * 10000000) /
-      10000000
+      this.shiftRange(
+        randomNumber,
+        yMinMax[0] * 10000000,
+        yMinMax[1] * 10000000
+      ) / 10000000
     );
+  };
+
+  createPointGeometry = (
+    xRandomNumber: number,
+    yRandomNumber: number,
+    { range }: IGisColumnOptions
+  ) => {
+    const { xMinMax, yMinMax } = range;
+    const x =
+      this.shiftRange(
+        xRandomNumber,
+        xMinMax[0] * 10000000,
+        xMinMax[1] * 10000000
+      ) / 10000000;
+    const y =
+      this.shiftRange(
+        yRandomNumber,
+        yMinMax[0] * 10000000,
+        yMinMax[1] * 10000000
+      ) / 10000000;
+    return [x, y];
   };
 
   shiftRange = (num: number, min: number, max: number) =>
     min + (Math.abs(num) % (max + 1 - min));
 
-  createData = (
-    { dataFormat, options }: IColumnProperties,
-    randomNumber: number
-  ) => {
+  createData = ({ dataFormat, options }: IColumnProperties) => {
     let data = null;
     switch (dataFormat) {
       case DATA_TYPE_VALUE.FIRST_NAME:
@@ -57,10 +90,23 @@ class FakerDataGenerator {
         data = this.createLastName();
         break;
       case DATA_TYPE_VALUE.LATITUDE:
-        data = this.createLatitude(randomNumber, options as IGisColumnOptions);
+        data = this.createLatitude(
+          this.randomGenerator.next(),
+          options as IGisColumnOptions
+        );
         break;
       case DATA_TYPE_VALUE.LONGITUDE:
-        data = this.createLongitude(randomNumber, options as IGisColumnOptions);
+        data = this.createLongitude(
+          this.randomGenerator.next(),
+          options as IGisColumnOptions
+        );
+        break;
+      case DATA_TYPE_VALUE.GEOMETRY_POINT:
+        data = this.createPointGeometry(
+          this.randomGenerator.next(),
+          this.randomGenerator.next(),
+          options as IGisColumnOptions
+        );
         break;
     }
     return data;

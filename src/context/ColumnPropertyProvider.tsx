@@ -7,6 +7,7 @@ import {
 } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
+import { CRS_VALUE } from "../constants/utils";
 import {
   IColumnProperties,
   IDefaultColumnOptions,
@@ -87,17 +88,21 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
   const createOptions = (dataFormat: DATA_TYPE_VALUE) => {
     switch (dataFormat) {
       case DATA_TYPE_VALUE.LATITUDE:
-        return createLatLonOptions(true);
       case DATA_TYPE_VALUE.LONGITUDE:
-        return createLatLonOptions(false);
+      case DATA_TYPE_VALUE.GEOMETRY_POINT:
+        return createLatLonOptions();
       default:
         return createDefaultOptions();
     }
   };
 
-  const createLatLonOptions = (isLat: boolean): IGisColumnOptions => {
+  const createLatLonOptions = (): IGisColumnOptions => {
     return {
-      range: isLat ? [-90, 90] : [-180, 180],
+      range: {
+        xMinMax: [-90, 90],
+        yMinMax: [-180, 180],
+      },
+      crs: CRS_VALUE.ESPG_4326,
     };
   };
 

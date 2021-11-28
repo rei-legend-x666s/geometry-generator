@@ -1,6 +1,7 @@
 import { SvgIconTypeMap } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
+import { CRS_VALUE } from "../constants/utils";
 
 export interface IMenuItem {
   name: string;
@@ -18,7 +19,11 @@ export interface IColumnProperties {
 export interface IDefaultColumnOptions {}
 
 export interface IGisColumnOptions {
-  range: number[];
+  range: {
+    xMinMax: number[];
+    yMinMax: number[];
+  };
+  crs: CRS_VALUE;
 }
 
 export interface IColumnDataFormat {
