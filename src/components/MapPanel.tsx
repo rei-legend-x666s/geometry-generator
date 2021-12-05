@@ -1,12 +1,25 @@
-import { Paper } from "@mui/material";
+import { MoreVert } from "@mui/icons-material";
+import {
+  Checkbox,
+  IconButton,
+  Menu,
+  MenuItem,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Toolbar,
+} from "@mui/material";
 import { Feature } from "ol";
 import { Point } from "ol/geom";
 import { fromLonLat } from "ol/proj";
-import { useState } from "react";
+import React, { useState } from "react";
+import { DATA_TYPE_VALUE } from "../constants/column-format";
 import { useDummyData } from "../context/DummyDataProvider";
-import { getIndexLatLonDataType } from "../functions/gisUtils";
 import Controls from "./Controls/Controls";
 import ZoomControl from "./Controls/ZoomControl";
+import FullScreenDialog from "./FullScreenDialog";
 import Layers from "./Layers/Layers";
 import TileLayer from "./Layers/TileLayer";
 import VectorLayer from "./Layers/VectorLayer";
@@ -18,39 +31,163 @@ import Title from "./Title";
 import "ol/ol.css";
 
 const MapPanel = () => {
-  const { dummyDataSet } = useDummyData();
+  const { dummyDataSetList } = useDummyData();
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [openFullDialog, setOpenFullDialog] = useState(false);
+  const [selected, setSelected] = useState<readonly string[]>([]);
   const [center] = useState([140, 35]);
   const [zoom] = useState(9);
+  const [featuresList, setFeaturesList] = useState<Feature<Point>[][]>([]);
 
-  const lonLatArray = () => {
-    if (!dummyDataSet) return [];
-    const [lonIndex, latIndex] = getIndexLatLonDataType(dummyDataSet);
-    if (lonIndex === -1 || latIndex === -1) return [];
-    return dummyDataSet.records.map(({ record }) => {
-      return [record[lonIndex].data as number, record[latIndex].data as number];
-    });
+  const handleOptionsMenu = ({
+    currentTarget,
+  }: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(currentTarget);
   };
 
-  const features = lonLatArray().map((item) => {
-    const feature = new Feature({
-      geometry: new Point(fromLonLat(item)),
-    });
-    feature.setStyle(styles.point);
-    return feature;
-  });
+  const handleCloseOptionsMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSetLayer = () => {
+    setOpenFullDialog(true);
+  };
+
+  const handleCloseFullDialog = () => {
+    setOpenFullDialog(false);
+  };
+
+  const handleOkFullDialog = () => {
+    const newFeaturesList = dummyDataSetList.reduce(
+      (item: Feature<Point>[][], dataSet) => {
+        if (selected.indexOf(dataSet.id) === -1) return item;
+        const geoIndexList = dataSet.columnPropsList.reduce(
+          (idxList: number[], { dataFormat }, idx1) => {
+            switch (dataFormat) {
+              case DATA_TYPE_VALUE.LATITUDE:
+                return [...idxList, idx1];
+              case DATA_TYPE_VALUE.LONGITUDE:
+                return [idx1, ...idxList];
+              case DATA_TYPE_VALUE.GEOMETRY_POINT:
+                return [idx1];
+              default:
+                return [];
+            }
+          },
+          []
+        );
+        const latLonArray =
+          geoIndexList.length > 0
+            ? dataSet.records.map(({ record }) => {
+                if (geoIndexList.length === 1) {
+                  return record[geoIndexList[0]].data as number[];
+                } else {
+                  return [
+                    record[geoIndexList[0]].data as number,
+                    record[geoIndexList[1]].data as number,
+                  ];
+                }
+              })
+            : [];
+        const features = latLonArray.map((latLon) => {
+          const feature = new Feature({
+            geometry: new Point(fromLonLat(latLon)),
+          });
+          feature.setStyle(styles.point);
+          return feature;
+        });
+        return [...item, features];
+      },
+      []
+    );
+    setFeaturesList(newFeaturesList);
+    setOpenFullDialog(false);
+  };
+
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
+
+  const handleClickLayerRow = (
+    event: React.MouseEvent<unknown>,
+    id: string
+  ) => {
+    setSelected(
+      selected.indexOf(id) === -1
+        ? [...selected, id]
+        : selected.filter((item) => item !== id)
+    );
+  };
 
   return (
     <Paper elevation={3} sx={{ p: 2 }}>
-      <Title>Map</Title>
+      <Toolbar variant="dense" sx={{ minHeight: 40 }}>
+        <Title>Map</Title>
+        <div style={{ flexGrow: 1 }} />
+        <div>
+          <IconButton
+            aria-label="options"
+            color="inherit"
+            onClick={handleOptionsMenu}
+          >
+            <MoreVert />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseOptionsMenu}
+          >
+            <MenuItem onClick={handleSetLayer}>Set Layer</MenuItem>
+          </Menu>
+        </div>
+      </Toolbar>
       <Map center={fromLonLat(center)} zoom={zoom}>
-        <Layers>
-          <TileLayer source={osm()} zIndex={0} />
-          <VectorLayer source={vector({ features })} />
-        </Layers>
+        {featuresList.map((features, idx) => (
+          <Layers key={idx}>
+            <TileLayer source={osm()} zIndex={0} />
+            <VectorLayer source={vector({ features })} />
+          </Layers>
+        ))}
         <Controls>
           <ZoomControl />
         </Controls>
       </Map>
+      <FullScreenDialog
+        open={openFullDialog}
+        title="Set Layer"
+        handleClose={handleCloseFullDialog}
+        handleOk={handleOkFullDialog}
+      >
+        <Table>
+          <TableBody>
+            {dummyDataSetList.map((dataSet, idx) => {
+              const isItemSelected = isSelected(dataSet.id);
+              const labelId = `enhanced-table-checkbox-${idx}`;
+
+              return (
+                <TableRow
+                  hover
+                  onClick={(event) => handleClickLayerRow(event, dataSet.id)}
+                  role="checkbox"
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={dataSet.id}
+                  selected={isItemSelected}
+                >
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      color="primary"
+                      checked={isItemSelected}
+                      inputProps={{
+                        "aria-labelledby": labelId,
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">#{idx}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </FullScreenDialog>
     </Paper>
   );
 };

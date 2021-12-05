@@ -13,4 +13,16 @@ const getIndexLatLonDataType = ({
   return [lonIndex, latIndex];
 };
 
-export { getIndexLatLonDataType };
+const isGeometryDataType = (dataFormat: DATA_TYPE_VALUE | null) => {
+  if (dataFormat === null) return false;
+  switch (dataFormat) {
+    case DATA_TYPE_VALUE.LATITUDE:
+    case DATA_TYPE_VALUE.LONGITUDE:
+    case DATA_TYPE_VALUE.GEOMETRY_POINT:
+      return true;
+    default:
+      return false;
+  }
+};
+
+export { getIndexLatLonDataType, isGeometryDataType };

@@ -33,7 +33,7 @@ export interface IColumnDataFormat {
 
 export interface IDummyDataProps {
   id: string;
-  data: string | number | null; // TODO: More strictly
+  data: string | number | number[] | null;
 }
 
 export interface IDummyDataRecord {
