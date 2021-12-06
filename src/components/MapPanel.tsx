@@ -140,12 +140,12 @@ const MapPanel = () => {
         </div>
       </Toolbar>
       <Map center={fromLonLat(center)} zoom={zoom}>
-        {featuresList.map((features, idx) => (
-          <Layers key={idx}>
-            <TileLayer source={osm()} zIndex={0} />
-            <VectorLayer source={vector({ features })} />
-          </Layers>
-        ))}
+        <Layers>
+          <TileLayer source={osm()} zIndex={0} />
+          {featuresList.map((features, idx) => (
+            <VectorLayer key={idx} source={vector({ features })} />
+          ))}
+        </Layers>
         <Controls>
           <ZoomControl />
         </Controls>

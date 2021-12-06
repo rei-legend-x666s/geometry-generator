@@ -36,8 +36,29 @@ const ColumnPropsTableRow = ({
   const optionForm = () => {
     switch (columnProperty.dataFormat) {
       case DATA_TYPE_VALUE.LATITUDE:
+        return (
+          <GisColumnOptionForm columnProps={columnProperty} isLatitude={true} />
+        );
       case DATA_TYPE_VALUE.LONGITUDE:
-        return <GisColumnOptionForm columnProps={columnProperty} />;
+        return (
+          <GisColumnOptionForm
+            columnProps={columnProperty}
+            isLatitude={false}
+          />
+        );
+      case DATA_TYPE_VALUE.GEOMETRY_POINT:
+        return (
+          <>
+            <GisColumnOptionForm
+              columnProps={columnProperty}
+              isLatitude={true}
+            />
+            <GisColumnOptionForm
+              columnProps={columnProperty}
+              isLatitude={false}
+            />
+          </>
+        );
     }
   };
 

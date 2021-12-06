@@ -1,19 +1,21 @@
 import { Box, FormGroup, InputLabel, Slider, TextField } from "@mui/material";
-import { DATA_TYPE_VALUE } from "../constants/column-format";
 import { CRS_VALUE } from "../constants/utils";
 import { useColumnProperty } from "../context/ColumnPropertyProvider";
 import { IColumnProperties, IGisColumnOptions } from "../types/general";
 
 interface GisColumnOptionFormProps {
   columnProps: IColumnProperties;
+  isLatitude: boolean;
 }
 
-const GisColumnOptionForm = ({ columnProps }: GisColumnOptionFormProps) => {
-  const { id, dataFormat } = columnProps;
-  const { range } = columnProps.options as IGisColumnOptions;
+const GisColumnOptionForm = ({
+  columnProps,
+  isLatitude,
+}: GisColumnOptionFormProps) => {
+  const { id, options } = columnProps;
+  const { range } = options as IGisColumnOptions;
   const { setOptions } = useColumnProperty();
 
-  const isLatitude = dataFormat === DATA_TYPE_VALUE.LATITUDE;
   const minMax = isLatitude ? range.xMinMax : range.yMinMax;
 
   const minDistance = 1;
@@ -32,7 +34,7 @@ const GisColumnOptionForm = ({ columnProps }: GisColumnOptionFormProps) => {
         ? [Math.min(newValue[0], minMax[1] - minDistance), minMax[1]]
         : [minMax[0], Math.max(newValue[1], minMax[0] + minDistance)];
     const newOptions = {
-      ...columnProps.options,
+      ...options,
       range: {
         xMinMax: isLatitude ? newRange : range.xMinMax,
         yMinMax: isLatitude ? range.yMinMax : newRange,
