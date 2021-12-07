@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import { IDummyDataSet } from "../types/general";
+import DataViewTableCell from "./DataViewTableCell";
 
 interface DataListTableProps {
   dataSet?: IDummyDataSet;
@@ -52,13 +53,18 @@ const DataListTable = ({ dataSet }: DataListTableProps) => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((dataRecord) => (
                 <TableRow key={dataRecord.id}>
-                  {dataSet?.columnPropsList.map((columnProp) => (
-                    <TableCell key={columnProp.id} align="center">
-                      {dataRecord.record.find(
-                        (dataProps) => dataProps.id === columnProp.id
-                      )?.data || ""}
-                    </TableCell>
-                  ))}
+                  {dataSet?.columnPropsList.map((columnProp) => {
+                    const data = dataRecord.record.find(
+                      (dataProps) => dataProps.id === columnProp.id
+                    )!.data;
+                    return (
+                      <DataViewTableCell
+                        key={columnProp.id}
+                        options={columnProp.options}
+                        data={data}
+                      />
+                    );
+                  })}
                 </TableRow>
               )) || ""}
           </TableBody>

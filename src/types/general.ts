@@ -16,13 +16,16 @@ export interface IColumnProperties {
   options: IDefaultColumnOptions | IGisColumnOptions;
 }
 
-export interface IDefaultColumnOptions {}
+export interface IDefaultColumnOptions {
+  formatter?: (data: DummyData) => string;
+}
 
 export interface IGisColumnOptions {
   range: {
     xMinMax: number[];
     yMinMax: number[];
   };
+  formatter?: (data: DummyData) => string;
   crs: CRS_VALUE;
 }
 
@@ -33,8 +36,10 @@ export interface IColumnDataFormat {
 
 export interface IDummyDataProps {
   id: string;
-  data: string | number | number[] | null;
+  data: DummyData;
 }
+
+export type DummyData = string | number | number[] | null;
 
 export interface IDummyDataRecord {
   id: string;

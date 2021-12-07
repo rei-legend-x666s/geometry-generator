@@ -8,6 +8,7 @@ import {
 import { v4 as uuidV4 } from "uuid";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
 import { CRS_VALUE } from "../constants/utils";
+import { geometryPointFormatter } from "../functions/gisUtils";
 import {
   IColumnProperties,
   IDefaultColumnOptions,
@@ -89,8 +90,11 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
     switch (dataFormat) {
       case DATA_TYPE_VALUE.LATITUDE:
       case DATA_TYPE_VALUE.LONGITUDE:
-      case DATA_TYPE_VALUE.GEOMETRY_POINT:
         return createLatLonOptions();
+      case DATA_TYPE_VALUE.GEOMETRY_POINT:
+        const options = createLatLonOptions();
+        options.formatter = geometryPointFormatter;
+        return options;
       default:
         return createDefaultOptions();
     }

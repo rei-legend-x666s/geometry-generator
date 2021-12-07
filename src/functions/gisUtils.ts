@@ -1,5 +1,5 @@
 import { DATA_TYPE_VALUE } from "../constants/column-format";
-import { IDummyDataSet } from "../types/general";
+import { DummyData, IDummyDataSet } from "../types/general";
 
 const getIndexLatLonDataType = ({
   columnPropsList,
@@ -25,4 +25,11 @@ const isGeometryDataType = (dataFormat: DATA_TYPE_VALUE | null) => {
   }
 };
 
-export { getIndexLatLonDataType, isGeometryDataType };
+const geometryPointFormatter = (data: DummyData) => {
+  if (!(data && Array.isArray(data) && data.length === 2)) {
+    return `can not format data:[${data}]`;
+  }
+  return `${data[0]}, ${data[1]}`;
+};
+
+export { getIndexLatLonDataType, isGeometryDataType, geometryPointFormatter };

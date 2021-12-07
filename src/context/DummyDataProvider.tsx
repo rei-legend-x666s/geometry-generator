@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useRef, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { v4 as uuidV4 } from "uuid";
 import {
   IColumnProperties,
@@ -27,11 +33,29 @@ type DummyDataProviderProps = {
 const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
   const [dummyDataSet, setDummyDataSet] = useState<IDummyDataSet>();
   const [dummyDataSetList, setDummyDataSetList] = useState<IDummyDataSet[]>([]);
-  const workerRef = useRef<Worker>();
+  const [worker, setWorker] = useState<Worker>();
+
+  useEffect(() => {
+    if (!worker) return;
+    worker.onmessage = onWorkerMessage;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [worker]);
 
   // @ts-ignore
-  const onWorkerMessage = ({ data: { input, output } }) => {
-    setDummyDataSetList([...dummyDataSetList, createNewDataSet(input, output)]);
+  const onWorkerMessage = ({ data: { id, dummyDataRecords } }) => {
+    updateDataSetRecords(id, dummyDataRecords);
+  };
+
+  const updateDataSetRecords = (
+    id: string,
+    dummyDataRecords: IDummyDataRecord[]
+  ) => {
+    const newDummyDataSetList = dummyDataSetList.map((dataSet) => {
+      return dataSet.id === id
+        ? { ...dataSet, records: dummyDataRecords }
+        : dataSet;
+    });
+    setDummyDataSetList(newDummyDataSetList);
   };
 
   const createNewDataSet = (
@@ -53,12 +77,20 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
     columnProperties: IColumnProperties[],
     rowCount: number
   ) => {
-    workerRef.current = new Worker(
+    const newDataSet = createNewDataSet(columnProperties);
+    setDummyDataSetList([...dummyDataSetList, newDataSet]);
+
+    const columnPropertiesJson = JSON.stringify(columnProperties);
+
+    const worker: Worker = new Worker(
       new URL("../functions/createDataWorker", import.meta.url)
     );
-    workerRef.current.onmessage = onWorkerMessage;
-
-    workerRef.current.postMessage({ columnProperties, rowCount });
+    worker.postMessage({
+      id: newDataSet.id,
+      columnPropertiesJson,
+      rowCount,
+    });
+    setWorker(worker);
   };
 
   const setViewDataSet = (id: string) => {
