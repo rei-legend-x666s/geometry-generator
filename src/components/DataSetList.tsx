@@ -58,6 +58,7 @@ const DataSetList = () => {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell align="center">Showing</TableCell>
+              <TableCell align="center">Name</TableCell>
               <TableCell align="center">Count</TableCell>
               <TableCell align="center">Delete</TableCell>
             </TableRow>
@@ -80,6 +81,9 @@ const DataSetList = () => {
                       <RadioButtonUnchecked />
                     )}
                   </IconButton>
+                </TableCell>
+                <TableCell align="center">
+                  {dataSet.name || <em>No Name</em>}
                 </TableCell>
                 <TableCell align="center">{dataSet.records.length}</TableCell>
                 <TableCell align="center">

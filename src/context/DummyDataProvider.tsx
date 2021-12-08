@@ -17,6 +17,7 @@ type DummyDataContextProps = {
   dummyDataSetList: IDummyDataSet[];
   createDummyDataRecords: (
     columnProperties: IColumnProperties[],
+    dataSetName: string,
     rowCount: number
   ) => void;
   setViewDataSet: (id: string) => void;
@@ -60,13 +61,15 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
 
   const createNewDataSet = (
     columnPropsList: IColumnProperties[] = [],
+    dataSetName: string = "",
     records: IDummyDataRecord[] = []
   ) => {
     return {
-      id: uuidV4(),
+      id: uuidV4().toString(),
+      name: dataSetName,
       columnPropsList,
       records,
-    };
+    } as IDummyDataSet;
   };
 
   const removeDataSet = (id: string) => {
@@ -75,9 +78,13 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
 
   const createDummyDataRecords = (
     columnProperties: IColumnProperties[],
+    dataSetName: string,
     rowCount: number
   ) => {
-    const newDataSet = createNewDataSet(columnProperties);
+    const newDataSet: IDummyDataSet = createNewDataSet(
+      columnProperties,
+      dataSetName
+    );
     setDummyDataSetList([...dummyDataSetList, newDataSet]);
 
     const columnPropertiesJson = JSON.stringify(columnProperties);

@@ -29,8 +29,13 @@ const ColumnPropertiesForm = () => {
 
   const { createDummyDataRecords } = useDummyData();
 
+  const [dataSetName, setDataSetName] = useState("");
   const [rowCount, setRowCount] = useState(1);
   const [isRowCountInputError, setIsRowCountInputError] = useState(false);
+
+  const handleChangeDataSetName = (event: ChangeEvent<HTMLInputElement>) => {
+    setDataSetName(event.target.value);
+  };
 
   const handleChangeRowCount = (event: ChangeEvent<HTMLInputElement>) => {
     setIsRowCountInputError(!NATURAL_NUMBER.test(event.target.value));
@@ -38,7 +43,7 @@ const ColumnPropertiesForm = () => {
   };
 
   const handleClickGenerate = () => {
-    createDummyDataRecords(columnProperties, rowCount);
+    createDummyDataRecords(columnProperties, dataSetName, rowCount);
   };
 
   return (
@@ -67,6 +72,16 @@ const ColumnPropertiesForm = () => {
         </Grid>
         <Grid item>
           <TextField
+            label="Data Set Name"
+            variant="standard"
+            size="small"
+            onChange={handleChangeDataSetName}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            sx={{ mx: 1 }}
+          />
+          <TextField
             label="Row Count"
             error={isRowCountInputError}
             type="number"
@@ -75,6 +90,10 @@ const ColumnPropertiesForm = () => {
             defaultValue={rowCount}
             onChange={handleChangeRowCount}
             helperText={isRowCountInputError ? "Input natural number" : " "}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            sx={{ mx: 1 }}
           />
           <Button
             variant="contained"

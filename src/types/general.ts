@@ -48,6 +48,7 @@ export interface IDummyDataRecord {
 
 export interface IDummyDataSet {
   id: string;
+  name: string;
   columnPropsList: IColumnProperties[];
   records: IDummyDataRecord[];
 }
