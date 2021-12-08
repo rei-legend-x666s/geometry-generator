@@ -134,8 +134,34 @@ const MapPanel = () => {
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleCloseOptionsMenu}
+            PaperProps={{
+              sx: {
+                mt: 1.5,
+                overflow: "visible",
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={handleSetLayer}>Set Layer</MenuItem>
+            <MenuItem onClick={handleSetLayer}>Layer Setting</MenuItem>
           </Menu>
         </div>
       </Toolbar>
@@ -160,7 +186,7 @@ const MapPanel = () => {
           <TableBody>
             {dummyDataSetList.map((dataSet, idx) => {
               const isItemSelected = isSelected(dataSet.id);
-              const labelId = `enhanced-table-checkbox-${idx}`;
+              const labelId = `enhanced-table-checkbox-${idx + 1}`;
 
               return (
                 <TableRow
@@ -181,7 +207,10 @@ const MapPanel = () => {
                       }}
                     />
                   </TableCell>
-                  <TableCell align="right">#{idx}</TableCell>
+                  <TableCell align="right">#{idx + 1}</TableCell>
+                  <TableCell align="right">
+                    {dataSet.name || <em>No Name</em>}
+                  </TableCell>
                 </TableRow>
               );
             })}
