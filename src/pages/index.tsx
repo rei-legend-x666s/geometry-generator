@@ -1,8 +1,8 @@
 import { Box, Grid } from "@mui/material";
 import type { NextPage } from "next";
-import ColumnPropertiesForm from "../components/ColumnPropertiesForm";
-import DataSetList from "../components/DataSetList";
 import CustomHead from "../components/Head";
+import ColumnPropertiesForm from "../components/Home/ColumnPropertiesForm";
+import DataSetList from "../components/Home/DataSetList";
 import ColumnPropertyProvider from "../context/ColumnPropertyProvider";
 
 const Home: NextPage = () => {

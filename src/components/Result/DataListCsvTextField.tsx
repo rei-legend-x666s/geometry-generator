@@ -14,9 +14,9 @@ import {
   TextField,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { NEW_LINE_CODE } from "../constants/utils";
-import convertCsvText from "../functions/csvUtils";
-import { IDummyDataSet } from "../types/general";
+import { NEW_LINE_CODE } from "../../constants/utils";
+import convertCsvText from "../../functions/csvUtils";
+import { IDummyDataSet } from "../../types/general";
 
 interface DataListCsvTextFieldProps {
   dataSet?: IDummyDataSet;

@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import { NextPage } from "next";
-import DataViewTable from "../components/DataViewTable";
 import CustomHead from "../components/Head";
+import DataViewTable from "../components/Result/DataViewTable";
 
 const Result: NextPage = () => {
   return (

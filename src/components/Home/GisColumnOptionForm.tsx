@@ -1,7 +1,7 @@
 import { Box, FormGroup, InputLabel, Slider, TextField } from "@mui/material";
-import { CRS_VALUE } from "../constants/utils";
-import { useColumnProperty } from "../context/ColumnPropertyProvider";
-import { IColumnProperties, IGisColumnOptions } from "../types/general";
+import { CRS_VALUE } from "../../constants/utils";
+import { useColumnProperty } from "../../context/ColumnPropertyProvider";
+import { IColumnProperties, IGisColumnOptions } from "../../types/general";
 
 interface GisColumnOptionFormProps {
   columnProps: IColumnProperties;

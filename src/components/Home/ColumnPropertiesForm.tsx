@@ -12,11 +12,11 @@ import {
   TextField,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { NATURAL_NUMBER } from "../constants/regex-constant";
-import { useColumnProperty } from "../context/ColumnPropertyProvider";
-import { useDummyData } from "../context/DummyDataProvider";
+import { NATURAL_NUMBER } from "../../constants/regex-constant";
+import { useColumnProperty } from "../../context/ColumnPropertyProvider";
+import { useDummyData } from "../../context/DummyDataProvider";
+import Title from "../Title";
 import ColumnPropsTableRow from "./ColumnPropsTableRow";
-import Title from "./Title";
 
 const ColumnPropertiesForm = () => {
   const {

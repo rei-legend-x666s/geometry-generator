@@ -15,11 +15,12 @@ import { Feature } from "ol";
 import { Point } from "ol/geom";
 import { fromLonLat } from "ol/proj";
 import React, { useState } from "react";
-import { DATA_TYPE_VALUE } from "../constants/column-format";
-import { useDummyData } from "../context/DummyDataProvider";
+import { DATA_TYPE_VALUE } from "../../constants/column-format";
+import { useDummyData } from "../../context/DummyDataProvider";
+import FullScreenDialog from "../FullScreenDialog";
+import Title from "../Title";
 import Controls from "./Controls/Controls";
 import ZoomControl from "./Controls/ZoomControl";
-import FullScreenDialog from "./FullScreenDialog";
 import Layers from "./Layers/Layers";
 import TileLayer from "./Layers/TileLayer";
 import VectorLayer from "./Layers/VectorLayer";
@@ -27,7 +28,6 @@ import Map from "./Map/Map";
 import osm from "./Source/osm";
 import vector from "./Source/vector";
 import { styles } from "./Styles/styles";
-import Title from "./Title";
 import "ol/ol.css";
 
 const MapPanel = () => {

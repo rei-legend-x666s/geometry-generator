@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import type { NextPage } from "next";
+import MapPanel from "../components/Gis/MapPanel";
 import CustomHead from "../components/Head";
-import MapPanel from "../components/MapPanel";
 
 const Gis: NextPage = () => {
   return (

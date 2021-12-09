@@ -3,7 +3,7 @@ import {
   DummyData,
   IDefaultColumnOptions,
   IGisColumnOptions,
-} from "../types/general";
+} from "../../types/general";
 
 interface DataViewTableCellProps {
   options: IDefaultColumnOptions | IGisColumnOptions;

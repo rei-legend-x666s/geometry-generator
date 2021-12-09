@@ -11,8 +11,8 @@ import { ChangeEvent, useState } from "react";
 import {
   COLUMN_FORMAT_LIST,
   DATA_TYPE_VALUE,
-} from "../constants/column-format";
-import { IColumnProperties } from "../types/general";
+} from "../../constants/column-format";
+import { IColumnProperties } from "../../types/general";
 import GisColumnOptionForm from "./GisColumnOptionForm";
 
 interface ColumnPropsTableRowProps {

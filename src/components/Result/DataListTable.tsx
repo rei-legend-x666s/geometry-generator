@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { IDummyDataSet } from "../types/general";
+import { IDummyDataSet } from "../../types/general";
 import DataViewTableCell from "./DataViewTableCell";
 
 interface DataListTableProps {
