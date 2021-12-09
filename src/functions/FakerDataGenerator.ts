@@ -74,7 +74,7 @@ class FakerDataGenerator {
         yMinMax[0] * 10000000,
         yMinMax[1] * 10000000
       ) / 10000000;
-    return [longitude, latitude];
+    return [latitude, longitude];
   };
 
   shiftRange = (num: number, min: number, max: number) =>

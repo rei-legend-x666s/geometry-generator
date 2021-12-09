@@ -65,9 +65,9 @@ const MapPanel = () => {
           (idxList: number[], { dataFormat }, idx1) => {
             switch (dataFormat) {
               case DATA_TYPE_VALUE.LATITUDE:
-                return [...idxList, idx1];
-              case DATA_TYPE_VALUE.LONGITUDE:
                 return [idx1, ...idxList];
+              case DATA_TYPE_VALUE.LONGITUDE:
+                return [...idxList, idx1];
               case DATA_TYPE_VALUE.GEOMETRY_POINT:
                 return [idx1];
               default:
@@ -91,7 +91,7 @@ const MapPanel = () => {
             : [];
         const features = latLonArray.map((latLon) => {
           const feature = new Feature({
-            geometry: new Point(fromLonLat(latLon)),
+            geometry: new Point(fromLonLat([latLon[1], latLon[0]])),
           });
           feature.setStyle(styles.point);
           return feature;
