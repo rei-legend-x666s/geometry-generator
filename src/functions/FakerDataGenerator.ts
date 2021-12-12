@@ -62,23 +62,15 @@ class FakerDataGenerator {
     { range }: IGisColumnOptions
   ) => {
     const { xMinMax, yMinMax } = range;
-    const latitude =
-      this.shiftRange(
-        xRandomNumber,
-        xMinMax[0] * 10000000,
-        xMinMax[1] * 10000000
-      ) / 10000000;
-    const longitude =
-      this.shiftRange(
-        yRandomNumber,
-        yMinMax[0] * 10000000,
-        yMinMax[1] * 10000000
-      ) / 10000000;
+    const latitude = this.shiftRange(xRandomNumber, xMinMax[0], xMinMax[1]);
+
+    console.log(yRandomNumber, Math.random());
+    const longitude = this.shiftRange(yRandomNumber, yMinMax[0], yMinMax[1]);
     return [latitude, longitude];
   };
 
   shiftRange = (num: number, min: number, max: number) =>
-    min + (Math.abs(num) % (max + 1 - min));
+    min + Math.abs(num) * (max - min);
 
   createData = ({ dataFormat, options }: IColumnProperties) => {
     let data = null;

@@ -1,24 +1,16 @@
 class RandomGenerator {
-  private x: number;
-  private y: number;
-  private z: number;
-  private w: number;
+  private readonly UINT32_MAX_NEXT = 2 ** 32;
+  private readonly s: Uint32Array;
 
   constructor(seed = Date.now()) {
-    this.x = 123456789;
-    this.y = 362436069;
-    this.z = 521288629;
-    this.w = seed;
+    this.s = Uint32Array.of(seed);
   }
 
-  // XorShift
   next() {
-    let t;
-    t = this.x ^ (this.x << 11);
-    this.x = this.y;
-    this.y = this.z;
-    this.z = this.w;
-    return (this.w = this.w ^ (this.w >>> 19) ^ (t ^ (t >>> 8)));
+    this.s[0] ^= this.s[0] << 13;
+    this.s[0] ^= this.s[0] >> 17;
+    this.s[0] ^= this.s[0] << 5;
+    return this.s[0] / this.UINT32_MAX_NEXT;
   }
 
   nextInt(min: number, max: number) {
