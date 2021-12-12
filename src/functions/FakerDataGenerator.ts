@@ -34,26 +34,14 @@ class FakerDataGenerator {
     randomNumber: number,
     { range: { xMinMax } }: IGisColumnOptions
   ) => {
-    return (
-      this.shiftRange(
-        randomNumber,
-        xMinMax[0] * 10000000,
-        xMinMax[1] * 10000000
-      ) / 10000000
-    );
+    return this.shiftRange(randomNumber, xMinMax[0], xMinMax[1]);
   };
 
   createLongitude = (
     randomNumber: number,
     { range: { yMinMax } }: IGisColumnOptions
   ) => {
-    return (
-      this.shiftRange(
-        randomNumber,
-        yMinMax[0] * 10000000,
-        yMinMax[1] * 10000000
-      ) / 10000000
-    );
+    return this.shiftRange(randomNumber, yMinMax[0], yMinMax[1]);
   };
 
   createPointGeometry = (
@@ -64,7 +52,6 @@ class FakerDataGenerator {
     const { xMinMax, yMinMax } = range;
     const latitude = this.shiftRange(xRandomNumber, xMinMax[0], xMinMax[1]);
 
-    console.log(yRandomNumber, Math.random());
     const longitude = this.shiftRange(yRandomNumber, yMinMax[0], yMinMax[1]);
     return [latitude, longitude];
   };
