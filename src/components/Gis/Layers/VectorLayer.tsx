@@ -7,11 +7,12 @@ import MapContext from "../Map/MapContext";
 
 interface VectorLayerProps {
   source: VectorSource<Geometry>;
+  id?: string;
   style?: Style;
   zIndex?: number;
 }
 
-const VectorLayer = ({ source, style, zIndex = 0 }: VectorLayerProps) => {
+const VectorLayer = ({ source, id, style, zIndex = 0 }: VectorLayerProps) => {
   const { map } = useContext(MapContext);
 
   useEffect(() => {
@@ -22,6 +23,9 @@ const VectorLayer = ({ source, style, zIndex = 0 }: VectorLayerProps) => {
     });
     map.addLayer(vectorLayer);
     vectorLayer.setZIndex(zIndex);
+    if (id) {
+      vectorLayer.setProperties({ id });
+    }
     return () => {
       if (map) {
         map.removeLayer(vectorLayer);

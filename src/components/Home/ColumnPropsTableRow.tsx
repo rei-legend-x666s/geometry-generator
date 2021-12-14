@@ -13,7 +13,8 @@ import {
   DATA_TYPE_VALUE,
 } from "../../constants/column-format";
 import { IColumnProperties } from "../../types/general";
-import GisColumnOptionForm from "./GisColumnOptionForm";
+import GisColumnOptions from "./GisColumnOptions";
+import LatLongRangeSlider from "./LatLongRangeSlider";
 
 interface ColumnPropsTableRowProps {
   idx: number;
@@ -37,28 +38,14 @@ const ColumnPropsTableRow = ({
     switch (columnProperty.dataFormat) {
       case DATA_TYPE_VALUE.LATITUDE:
         return (
-          <GisColumnOptionForm columnProps={columnProperty} isLatitude={true} />
+          <LatLongRangeSlider columnProps={columnProperty} isLatitude={true} />
         );
       case DATA_TYPE_VALUE.LONGITUDE:
         return (
-          <GisColumnOptionForm
-            columnProps={columnProperty}
-            isLatitude={false}
-          />
+          <LatLongRangeSlider columnProps={columnProperty} isLatitude={false} />
         );
       case DATA_TYPE_VALUE.GEOMETRY_POINT:
-        return (
-          <>
-            <GisColumnOptionForm
-              columnProps={columnProperty}
-              isLatitude={true}
-            />
-            <GisColumnOptionForm
-              columnProps={columnProperty}
-              isLatitude={false}
-            />
-          </>
-        );
+        return <GisColumnOptions columnProps={columnProperty} />;
     }
   };
 

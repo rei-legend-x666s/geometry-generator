@@ -17,8 +17,14 @@ const point = new Style({
   stroke: stroke,
 });
 
+const polygon = new Style({
+  fill: new Fill({ color: "rgb(255, 0, 0, 0.5)" }),
+  stroke,
+});
+
 const styles = {
   point,
+  polygon,
 };
 
 export { styles };

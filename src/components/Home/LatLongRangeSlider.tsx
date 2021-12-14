@@ -8,7 +8,7 @@ interface GisColumnOptionFormProps {
   isLatitude: boolean;
 }
 
-const GisColumnOptionForm = ({
+const LatLongRangeSlider = ({
   columnProps,
   isLatitude,
 }: GisColumnOptionFormProps) => {
@@ -39,7 +39,7 @@ const GisColumnOptionForm = ({
         xMinMax: isLatitude ? newRange : range.xMinMax,
         yMinMax: isLatitude ? range.yMinMax : newRange,
       },
-      crs: CRS_VALUE.ESPG_4326,
+      crs: CRS_VALUE.EPSG_4326,
     };
     setOptions(id, newOptions);
   };
@@ -65,4 +65,4 @@ const GisColumnOptionForm = ({
   );
 };
 
-export default GisColumnOptionForm;
+export default LatLongRangeSlider;
