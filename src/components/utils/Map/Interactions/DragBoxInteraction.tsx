@@ -15,10 +15,10 @@ import MapContext from "../MapContext";
 import { styles } from "../Styles/styles";
 
 interface DragBoxInteractionProps {
-  setRangePolygon?: Dispatch<SetStateAction<Geometry | undefined>>;
+  setExtent?: Dispatch<SetStateAction<number[] | undefined>>;
 }
 
-const DragBoxInteraction = ({ setRangePolygon }: DragBoxInteractionProps) => {
+const DragBoxInteraction = ({ setExtent }: DragBoxInteractionProps) => {
   const { map } = useContext(MapContext);
   const [dragBox, setDragBox] = useState<DragBox>();
 
@@ -35,9 +35,9 @@ const DragBoxInteraction = ({ setRangePolygon }: DragBoxInteractionProps) => {
   useEffect(() => {
     if (!dragBox || !map) return;
     dragBox.on("boxend", () => {
-      if (!dragBox || !setRangePolygon) return;
+      if (!dragBox || !setExtent) return;
       const geometry = dragBox.getGeometry();
-      setRangePolygon(geometry);
+      setExtent(geometry.getExtent());
       const boxFeature = new Feature(geometry);
       boxFeature.setStyle(styles.polygon);
       boxFeature.setId("boxFeature");

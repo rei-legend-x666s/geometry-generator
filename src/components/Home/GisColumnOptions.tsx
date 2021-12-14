@@ -1,6 +1,5 @@
 import { Map } from "@mui/icons-material";
 import { Grid, IconButton } from "@mui/material";
-import { Geometry } from "ol/geom";
 import { fromLonLat, transform } from "ol/proj";
 import { useState } from "react";
 import { CRS_VALUE } from "../../constants/utils";
@@ -28,7 +27,7 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
   const [openMap, setOpenMap] = useState(false);
   const [zoom] = useState(9);
   const [center] = useState([140, 35]);
-  const [rangePolygon, setRangePolygon] = useState<Geometry>();
+  const [extent, setExtent] = useState<number[]>();
   const options = columnProps.options as IGisColumnOptions;
 
   const handleClickMap = () => {
@@ -36,8 +35,10 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
   };
 
   const handleFullDialogOk = () => {
-    if (!rangePolygon) return;
-    const extent = rangePolygon.getExtent();
+    if (!extent || extent.length < 4) {
+      setOpenMap(false);
+      return;
+    }
     const minLonLat = [extent[0], extent[1]];
     const maxLonLat = [extent[2], extent[3]];
     const minRange = transform(
@@ -90,7 +91,7 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
           <Controls>
             <ZoomControl />
           </Controls>
-          <DragBoxInteraction setRangePolygon={setRangePolygon} />
+          <DragBoxInteraction setExtent={setExtent} />
         </MapContent>
       </FullScreenDialog>
     </>
