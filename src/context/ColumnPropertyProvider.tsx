@@ -106,7 +106,7 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
         xMinMax: [-90, 90],
         yMinMax: [-180, 180],
       },
-      crs: CRS_VALUE.ESPG_4326,
+      crs: CRS_VALUE.EPSG_4326,
     };
   };
 
