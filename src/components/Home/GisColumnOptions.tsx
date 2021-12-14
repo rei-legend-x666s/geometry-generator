@@ -38,7 +38,6 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
   const handleFullDialogOk = () => {
     if (!rangePolygon) return;
     const extent = rangePolygon.getExtent();
-    console.log(extent);
     const minLonLat = [extent[0], extent[1]];
     const maxLonLat = [extent[2], extent[3]];
     const minRange = transform(
