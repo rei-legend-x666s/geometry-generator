@@ -17,17 +17,17 @@ import { fromLonLat } from "ol/proj";
 import React, { useState } from "react";
 import { DATA_TYPE_VALUE } from "../../constants/column-format";
 import { useDummyData } from "../../context/DummyDataProvider";
-import FullScreenDialog from "../FullScreenDialog";
-import Title from "../Title";
-import Controls from "./Controls/Controls";
-import ZoomControl from "./Controls/ZoomControl";
-import Layers from "./Layers/Layers";
-import TileLayer from "./Layers/TileLayer";
-import VectorLayer from "./Layers/VectorLayer";
-import Map from "./Map/Map";
-import osm from "./Source/osm";
-import vector from "./Source/vector";
-import { styles } from "./Styles/styles";
+import FullScreenDialog from "../utils/FullScreenDialog";
+import Controls from "../utils/Map/Controls/Controls";
+import ZoomControl from "../utils/Map/Controls/ZoomControl";
+import Layers from "../utils/Map/Layers/Layers";
+import TileLayer from "../utils/Map/Layers/TileLayer";
+import VectorLayer from "../utils/Map/Layers/VectorLayer";
+import Map from "../utils/Map/Map";
+import osm from "../utils/Map/Source/osm";
+import vector from "../utils/Map/Source/vector";
+import { styles } from "../utils/Map/Styles/styles";
+import Title from "../utils/Title";
 import "ol/ol.css";
 
 const MapPanel = () => {

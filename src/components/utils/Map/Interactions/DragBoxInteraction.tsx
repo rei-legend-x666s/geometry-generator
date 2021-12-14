@@ -11,7 +11,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import MapContext from "../Map/MapContext";
+import MapContext from "../MapContext";
 import { styles } from "../Styles/styles";
 
 interface DragBoxInteractionProps {

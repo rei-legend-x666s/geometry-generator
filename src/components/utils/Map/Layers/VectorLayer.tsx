@@ -3,7 +3,7 @@ import OLVectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Style } from "ol/style";
 import { useContext, useEffect } from "react";
-import MapContext from "../Map/MapContext";
+import MapContext from "../MapContext";
 
 interface VectorLayerProps {
   source: VectorSource<Geometry>;

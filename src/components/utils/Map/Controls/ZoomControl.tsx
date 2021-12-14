@@ -1,6 +1,6 @@
 import { Zoom } from "ol/control";
 import { useContext, useEffect } from "react";
-import MapContext from "../Map/MapContext";
+import MapContext from "../MapContext";
 
 const ZoomControl = () => {
   const { map } = useContext(MapContext);

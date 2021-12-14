@@ -15,7 +15,7 @@ import { ChangeEvent, useState } from "react";
 import { NATURAL_NUMBER } from "../../constants/regex-constant";
 import { useColumnProperty } from "../../context/ColumnPropertyProvider";
 import { useDummyData } from "../../context/DummyDataProvider";
-import Title from "../Title";
+import Title from "../utils/Title";
 import ColumnPropsTableRow from "./ColumnPropsTableRow";
 
 const ColumnPropertiesForm = () => {

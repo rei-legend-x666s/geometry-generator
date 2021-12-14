@@ -16,8 +16,8 @@ import {
 import { useState } from "react";
 import { useDummyData } from "../../context/DummyDataProvider";
 import { IDummyDataSet } from "../../types/general";
-import ConfirmDialog from "../ConfirmDialog";
-import Title from "../Title";
+import ConfirmDialog from "../utils/ConfirmDialog";
+import Title from "../utils/Title";
 
 const DataSetList = () => {
   const { dummyDataSet, dummyDataSetList, setViewDataSet, removeDataSet } =

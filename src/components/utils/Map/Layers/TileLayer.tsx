@@ -1,7 +1,7 @@
 import OLTileLayer from "ol/layer/Tile";
 import TileSource from "ol/source/Tile";
 import { useContext, useEffect } from "react";
-import MapContext from "../Map/MapContext";
+import MapContext from "../MapContext";
 
 interface TileLayerProps {
   source: TileSource;

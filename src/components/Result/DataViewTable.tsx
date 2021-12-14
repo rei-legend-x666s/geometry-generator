@@ -1,7 +1,7 @@
 import { Paper, Tab, Tabs } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
 import { useDummyData } from "../../context/DummyDataProvider";
-import Title from "../Title";
+import Title from "../utils/Title";
 import DataListCsvTextField from "./DataListCsvTextField";
 import DataListTable from "./DataListTable";
 import TabPanel from "./TabPanel";
