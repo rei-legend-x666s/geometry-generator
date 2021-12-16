@@ -1,21 +1,16 @@
 import { Map } from "@mui/icons-material";
 import { Grid, IconButton } from "@mui/material";
-import { fromLonLat, transform } from "ol/proj";
+import { Geometry } from "ol/geom";
+import OLVectorLayer from "ol/layer/Vector";
+import { transform } from "ol/proj";
+import VectorSource from "ol/source/Vector";
 import { useState } from "react";
 import { CRS_VALUE } from "../../constants/utils";
 import { useColumnProperty } from "../../context/ColumnPropertyProvider";
+import { useMap } from "../../context/MapProvider";
 import { IColumnProperties, IGisColumnOptions } from "../../types/general";
-import FullScreenDialog from "../utils/FullScreenDialog";
-import Controls from "../utils/Map/Controls/Controls";
-import ZoomControl from "../utils/Map/Controls/ZoomControl";
-import DragBoxInteraction from "../utils/Map/Interactions/DragBoxInteraction";
-import Layers from "../utils/Map/Layers/Layers";
-import TileLayer from "../utils/Map/Layers/TileLayer";
-import VectorLayer from "../utils/Map/Layers/VectorLayer";
-import MapContent from "../utils/Map/Map";
-import osm from "../utils/Map/Source/osm";
-import vector from "../utils/Map/Source/vector";
 import LatLongRangeSlider from "./LatLongRangeSlider";
+import RangeInputMapDialog from "./RangeInputMapDialog";
 import "ol/ol.css";
 
 interface GisColumnOptionsProps {
@@ -24,21 +19,27 @@ interface GisColumnOptionsProps {
 
 const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
   const { setOptions } = useColumnProperty();
+  const { getLayerById } = useMap();
   const [openMap, setOpenMap] = useState(false);
-  const [zoom] = useState(9);
-  const [center] = useState([140, 35]);
-  const [extent, setExtent] = useState<number[]>();
   const options = columnProps.options as IGisColumnOptions;
 
   const handleClickMap = () => {
     setOpenMap(true);
   };
 
-  const handleFullDialogOk = () => {
-    if (!extent || extent.length < 4) {
-      setOpenMap(false);
-      return;
-    }
+  const setRange = () => {
+    const layer = getLayerById("dragBoxLayer");
+    if (!layer) return;
+
+    const geometry = (layer as OLVectorLayer<VectorSource<Geometry>>)
+      .getSource()
+      .getFeatureById("box")
+      .getGeometry();
+    if (!geometry) return;
+
+    const extent = geometry.getExtent();
+    if (!extent || extent.length < 4) return;
+
     const minLonLat = [extent[0], extent[1]];
     const maxLonLat = [extent[2], extent[3]];
     const minRange = transform(
@@ -51,6 +52,7 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
       CRS_VALUE.EPSG_3857,
       CRS_VALUE.EPSG_4326
     );
+
     const newOptions = {
       ...options,
       range: {
@@ -59,6 +61,10 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
       },
     };
     setOptions(columnProps.id, newOptions);
+  };
+
+  const handleFullDialogOk = () => {
+    setRange();
     setOpenMap(false);
   };
 
@@ -75,25 +81,11 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
           </IconButton>
         </Grid>
       </Grid>
-      <FullScreenDialog
+      <RangeInputMapDialog
         open={openMap}
-        title="Drag Map"
-        handleClose={() => {
-          setOpenMap(false);
-        }}
         handleOk={handleFullDialogOk}
-      >
-        <MapContent center={fromLonLat(center)} zoom={zoom}>
-          <Layers>
-            <TileLayer source={osm()} zIndex={0} />
-            <VectorLayer source={vector({ features: [] })} id="dragBoxLayer" />
-          </Layers>
-          <Controls>
-            <ZoomControl />
-          </Controls>
-          <DragBoxInteraction setExtent={setExtent} />
-        </MapContent>
-      </FullScreenDialog>
+        handleCancel={() => setOpenMap(false)}
+      />
     </>
   );
 };

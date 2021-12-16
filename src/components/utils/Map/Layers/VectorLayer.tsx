@@ -2,8 +2,8 @@ import { Geometry } from "ol/geom";
 import OLVectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Style } from "ol/style";
-import { useContext, useEffect } from "react";
-import MapContext from "../MapContext";
+import { useEffect } from "react";
+import { useMap } from "../../../../context/MapProvider";
 
 interface VectorLayerProps {
   source: VectorSource<Geometry>;
@@ -13,7 +13,7 @@ interface VectorLayerProps {
 }
 
 const VectorLayer = ({ source, id, style, zIndex = 0 }: VectorLayerProps) => {
-  const { map } = useContext(MapContext);
+  const { map } = useMap();
 
   useEffect(() => {
     if (!map) return;

@@ -1,6 +1,6 @@
 import * as ol from "ol";
-import { ReactNode, useEffect, useRef, useState } from "react";
-import MapContext from "./MapContext";
+import { ReactNode, useEffect, useRef } from "react";
+import { useMap } from "../../../context/MapProvider";
 
 interface MapProps {
   children: ReactNode;
@@ -10,7 +10,7 @@ interface MapProps {
 
 const Map = ({ children, zoom, center }: MapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<ol.Map>();
+  const { map, setMap } = useMap();
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -40,11 +40,9 @@ const Map = ({ children, zoom, center }: MapProps) => {
   }, [center]);
 
   return (
-    <MapContext.Provider value={{ map }}>
-      <div ref={mapRef} className="ol-map">
-        {children}
-      </div>
-    </MapContext.Provider>
+    <div ref={mapRef} className="ol-map">
+      {children}
+    </div>
   );
 };
 

@@ -12,6 +12,7 @@ import {
   COLUMN_FORMAT_LIST,
   DATA_TYPE_VALUE,
 } from "../../constants/column-format";
+import MapProvider from "../../context/MapProvider";
 import { IColumnProperties } from "../../types/general";
 import GisColumnOptions from "./GisColumnOptions";
 import LatLongRangeSlider from "./LatLongRangeSlider";
@@ -45,7 +46,11 @@ const ColumnPropsTableRow = ({
           <LatLongRangeSlider columnProps={columnProperty} isLatitude={false} />
         );
       case DATA_TYPE_VALUE.GEOMETRY_POINT:
-        return <GisColumnOptions columnProps={columnProperty} />;
+        return (
+          <MapProvider>
+            <GisColumnOptions columnProps={columnProperty} />
+          </MapProvider>
+        );
     }
   };
 

@@ -1,7 +1,7 @@
 import OLTileLayer from "ol/layer/Tile";
 import TileSource from "ol/source/Tile";
-import { useContext, useEffect } from "react";
-import MapContext from "../MapContext";
+import { useEffect } from "react";
+import { useMap } from "../../../../context/MapProvider";
 
 interface TileLayerProps {
   source: TileSource;
@@ -9,7 +9,7 @@ interface TileLayerProps {
 }
 
 const TileLayer = ({ source, zIndex = 0 }: TileLayerProps) => {
-  const { map } = useContext(MapContext);
+  const { map } = useMap();
 
   useEffect(() => {
     if (!map) return;

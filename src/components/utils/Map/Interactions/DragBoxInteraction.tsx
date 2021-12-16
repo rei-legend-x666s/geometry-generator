@@ -4,22 +4,12 @@ import { Geometry } from "ol/geom";
 import { DragBox } from "ol/interaction";
 import OLVectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import MapContext from "../MapContext";
+import { useEffect, useState } from "react";
+import { useMap } from "../../../../context/MapProvider";
 import { styles } from "../Styles/styles";
 
-interface DragBoxInteractionProps {
-  setExtent?: Dispatch<SetStateAction<number[] | undefined>>;
-}
-
-const DragBoxInteraction = ({ setExtent }: DragBoxInteractionProps) => {
-  const { map } = useContext(MapContext);
+const DragBoxInteraction = () => {
+  const { map, getLayerById } = useMap();
   const [dragBox, setDragBox] = useState<DragBox>();
 
   useEffect(() => {
@@ -35,19 +25,15 @@ const DragBoxInteraction = ({ setExtent }: DragBoxInteractionProps) => {
   useEffect(() => {
     if (!dragBox || !map) return;
     dragBox.on("boxend", () => {
-      if (!dragBox || !setExtent) return;
+      const layer = getLayerById("dragBoxLayer");
+      if (!dragBox || !layer) return;
       const geometry = dragBox.getGeometry();
-      setExtent(geometry.getExtent());
       const boxFeature = new Feature(geometry);
       boxFeature.setStyle(styles.polygon);
-      boxFeature.setId("boxFeature");
-      map.getLayers().forEach((layer) => {
-        if (layer.get("id") === "dragBoxLayer") {
-          const vectorLayer = layer as OLVectorLayer<VectorSource<Geometry>>;
-          vectorLayer.getSource().clear();
-          vectorLayer.getSource().addFeature(boxFeature);
-        }
-      });
+      boxFeature.setId("box");
+      const vectorLayer = layer as OLVectorLayer<VectorSource<Geometry>>;
+      vectorLayer.getSource().clear();
+      vectorLayer.getSource().addFeature(boxFeature);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dragBox]);

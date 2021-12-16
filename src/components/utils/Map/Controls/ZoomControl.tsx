@@ -1,9 +1,9 @@
 import { Zoom } from "ol/control";
-import { useContext, useEffect } from "react";
-import MapContext from "../MapContext";
+import { useEffect } from "react";
+import { useMap } from "../../../../context/MapProvider";
 
 const ZoomControl = () => {
-  const { map } = useContext(MapContext);
+  const { map } = useMap();
 
   useEffect(() => {
     if (!map) return;

@@ -17,6 +17,7 @@ import { fromLonLat } from "ol/proj";
 import React, { useState } from "react";
 import { DATA_TYPE_VALUE } from "../../constants/column-format";
 import { useDummyData } from "../../context/DummyDataProvider";
+import MapProvider from "../../context/MapProvider";
 import FullScreenDialog from "../utils/FullScreenDialog";
 import Controls from "../utils/Map/Controls/Controls";
 import ZoomControl from "../utils/Map/Controls/ZoomControl";
@@ -165,17 +166,19 @@ const MapPanel = () => {
           </Menu>
         </div>
       </Toolbar>
-      <Map center={fromLonLat(center)} zoom={zoom}>
-        <Layers>
-          <TileLayer source={osm()} zIndex={0} />
-          {featuresList.map((features, idx) => (
-            <VectorLayer key={idx} source={vector({ features })} />
-          ))}
-        </Layers>
-        <Controls>
-          <ZoomControl />
-        </Controls>
-      </Map>
+      <MapProvider>
+        <Map center={fromLonLat(center)} zoom={zoom}>
+          <Layers>
+            <TileLayer source={osm()} zIndex={0} />
+            {featuresList.map((features, idx) => (
+              <VectorLayer key={idx} source={vector({ features })} />
+            ))}
+          </Layers>
+          <Controls>
+            <ZoomControl />
+          </Controls>
+        </Map>
+      </MapProvider>
       <FullScreenDialog
         open={openFullDialog}
         title="Set Layer"
