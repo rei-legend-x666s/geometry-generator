@@ -56,6 +56,7 @@ const MapPanel = () => {
 
   const handleCloseFullDialog = () => {
     setOpenFullDialog(false);
+    handleCloseOptionsMenu();
   };
 
   const handleOkFullDialog = () => {
@@ -103,6 +104,7 @@ const MapPanel = () => {
     );
     setFeaturesList(newFeaturesList);
     setOpenFullDialog(false);
+    handleCloseOptionsMenu();
   };
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
