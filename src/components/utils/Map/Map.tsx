@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import * as ol from "ol";
 import { ReactNode, useEffect, useRef } from "react";
 import { useMap } from "../../../context/MapProvider";
@@ -6,9 +7,10 @@ interface MapProps {
   children: ReactNode;
   zoom: number;
   center: number[];
+  height?: string;
 }
 
-const Map = ({ children, zoom, center }: MapProps) => {
+const Map = ({ children, zoom, center, height }: MapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const { map, setMap } = useMap();
 
@@ -40,9 +42,13 @@ const Map = ({ children, zoom, center }: MapProps) => {
   }, [center]);
 
   return (
-    <div ref={mapRef} className="ol-map">
+    <Box
+      component="div"
+      ref={mapRef}
+      sx={{ width: "100%", height: height ? height : "100% !important" }}
+    >
       {children}
-    </div>
+    </Box>
   );
 };
 

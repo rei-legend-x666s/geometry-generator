@@ -123,7 +123,7 @@ const MapPanel = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 2 }}>
+    <Paper elevation={3} sx={{ p: 2, height: 600 }}>
       <Toolbar variant="dense" sx={{ minHeight: 40 }}>
         <Title>Map</Title>
         <div style={{ flexGrow: 1 }} />
@@ -171,7 +171,7 @@ const MapPanel = () => {
         </div>
       </Toolbar>
       <MapProvider>
-        <Map center={fromLonLat(center)} zoom={zoom}>
+        <Map center={fromLonLat(center)} zoom={zoom} height="calc(100% - 40px)">
           <Layers>
             <TileLayer source={osm()} zIndex={0} />
             {featuresList.map((features, idx) => (
