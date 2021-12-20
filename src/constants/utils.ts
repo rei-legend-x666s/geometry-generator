@@ -15,3 +15,8 @@ export const CRS_VALUE = {
 };
 
 export type CRS_VALUE = typeof CRS_VALUE[keyof typeof CRS_VALUE];
+
+export const DATE_FORMAT = {
+  TYPE1: "yyyy-MM-dd'T'HH:mm:ss",
+  TYPE2: "yyyy/MM/dd HH:mm:ss",
+};

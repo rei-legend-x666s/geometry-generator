@@ -14,7 +14,9 @@ import {
   TableRow,
 } from "@mui/material";
 import { useState } from "react";
+import { DATE_FORMAT } from "../../constants/utils";
 import { useDummyData } from "../../context/DummyDataProvider";
+import { formatFromISO } from "../../functions/dateUtils";
 import { IDummyDataSet } from "../../types/general";
 import ConfirmDialog from "../utils/ConfirmDialog";
 import Title from "../utils/Title";
@@ -60,6 +62,7 @@ const DataSetList = () => {
               <TableCell align="center">Showing</TableCell>
               <TableCell align="center">Name</TableCell>
               <TableCell align="center">Count</TableCell>
+              <TableCell align="center">Created At</TableCell>
               <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
@@ -86,6 +89,9 @@ const DataSetList = () => {
                   {dataSet.name || <em>No Name</em>}
                 </TableCell>
                 <TableCell align="center">{dataSet.records.length}</TableCell>
+                <TableCell align="center">
+                  {formatFromISO(dataSet.createdAt, DATE_FORMAT.TYPE2)}
+                </TableCell>
                 <TableCell align="center">
                   <IconButton
                     aria-label="delete"

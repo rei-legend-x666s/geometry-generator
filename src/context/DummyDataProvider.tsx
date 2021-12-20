@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import {
   createContext,
   ReactNode,
@@ -6,6 +7,7 @@ import {
   useState,
 } from "react";
 import { v4 as uuidV4 } from "uuid";
+import { DATE_FORMAT } from "../constants/utils";
 import {
   IColumnProperties,
   IDummyDataRecord,
@@ -69,7 +71,8 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
       name: dataSetName,
       columnPropsList,
       records,
-    } as IDummyDataSet;
+      createdAt: format(new Date(), DATE_FORMAT.TYPE1),
+    };
   };
 
   const removeDataSet = (id: string) => {

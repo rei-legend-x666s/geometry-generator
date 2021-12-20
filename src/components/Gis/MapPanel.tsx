@@ -16,8 +16,10 @@ import { Point } from "ol/geom";
 import { fromLonLat } from "ol/proj";
 import React, { useState } from "react";
 import { DATA_TYPE_VALUE } from "../../constants/column-format";
+import { DATE_FORMAT } from "../../constants/utils";
 import { useDummyData } from "../../context/DummyDataProvider";
 import MapProvider from "../../context/MapProvider";
+import { formatFromISO } from "../../functions/dateUtils";
 import FullScreenDialog from "../utils/FullScreenDialog";
 import Controls from "../utils/Map/Controls/Controls";
 import ZoomControl from "../utils/Map/Controls/ZoomControl";
@@ -215,6 +217,9 @@ const MapPanel = () => {
                   <TableCell align="right">#{idx + 1}</TableCell>
                   <TableCell align="right">
                     {dataSet.name || <em>No Name</em>}
+                  </TableCell>
+                  <TableCell align="right">
+                    {formatFromISO(dataSet.createdAt, DATE_FORMAT.TYPE2)}
                   </TableCell>
                 </TableRow>
               );

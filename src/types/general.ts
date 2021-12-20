@@ -51,6 +51,7 @@ export interface IDummyDataSet {
   name: string;
   columnPropsList: IColumnProperties[];
   records: IDummyDataRecord[];
+  createdAt: string;
 }
 
 export type Locale = "ja" | "en";
