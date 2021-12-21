@@ -1,6 +1,5 @@
 import { Map } from "@mui/icons-material";
 import { Grid, IconButton } from "@mui/material";
-import { Geometry } from "ol/geom";
 import OLVectorLayer from "ol/layer/Vector";
 import { transform } from "ol/proj";
 import VectorSource from "ol/source/Vector";
@@ -28,13 +27,13 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
   };
 
   const setRange = () => {
-    const layer = getLayerById("dragBoxLayer");
+    const layer = getLayerById("dragBoxLayer", OLVectorLayer);
     if (!layer) return;
 
-    const geometry = (layer as OLVectorLayer<VectorSource<Geometry>>)
-      .getSource()
-      .getFeatureById("box")
-      .getGeometry();
+    const source = layer.getSource();
+    if (!(source instanceof VectorSource)) return;
+
+    const geometry = source.getFeatureById("box").getGeometry();
     if (!geometry) return;
 
     const extent = geometry.getExtent();

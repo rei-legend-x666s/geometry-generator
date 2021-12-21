@@ -1,5 +1,4 @@
 import * as ol from "ol";
-import BaseLayer from "ol/layer/Base";
 import {
   createContext,
   Dispatch,
@@ -12,7 +11,7 @@ import {
 interface MapContextProps {
   map?: ol.Map;
   setMap: Dispatch<SetStateAction<ol.Map | undefined>>;
-  getLayerById: (id: string) => BaseLayer | null;
+  getLayerById: <T>(id: string, layerClass: { new (): T }) => T | null;
 }
 
 const MapContext = createContext({} as MapContextProps);
@@ -25,13 +24,17 @@ type MapProviderProps = {
 const MapProvider = ({ children }: MapProviderProps) => {
   const [map, setMap] = useState<ol.Map>();
 
-  const getLayerById = (id: string) => {
+  const getLayerById = <T extends unknown>(
+    id: string,
+    layerClass: { new (): T }
+  ) => {
     if (!map) return null;
     const layers = map
       .getLayers()
       .getArray()
       .filter((l) => l.get("id") === id);
     if (layers.length !== 1) return null;
+    if (!(layers[0] instanceof layerClass)) return null;
     return layers[0];
   };
 

@@ -1,6 +1,5 @@
 import { Feature } from "ol";
 import { shiftKeyOnly } from "ol/events/condition";
-import { Geometry } from "ol/geom";
 import { DragBox } from "ol/interaction";
 import OLVectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
@@ -25,15 +24,18 @@ const DragBoxInteraction = () => {
   useEffect(() => {
     if (!dragBox || !map) return;
     dragBox.on("boxend", () => {
-      const layer = getLayerById("dragBoxLayer");
+      const layer = getLayerById("dragBoxLayer", OLVectorLayer);
       if (!dragBox || !layer) return;
+
       const geometry = dragBox.getGeometry();
       const boxFeature = new Feature(geometry);
       boxFeature.setStyle(styles.polygon);
       boxFeature.setId("box");
-      const vectorLayer = layer as OLVectorLayer<VectorSource<Geometry>>;
-      vectorLayer.getSource().clear();
-      vectorLayer.getSource().addFeature(boxFeature);
+
+      const source = layer.getSource();
+      if (!(source instanceof VectorSource)) return;
+      source.clear();
+      source.addFeature(boxFeature);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dragBox]);
