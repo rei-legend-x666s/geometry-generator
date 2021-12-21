@@ -39,15 +39,13 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
     const extent = geometry.getExtent();
     if (!extent || extent.length < 4) return;
 
-    const minLonLat = [extent[0], extent[1]];
-    const maxLonLat = [extent[2], extent[3]];
-    const minRange = transform(
-      minLonLat,
+    const [yMin, xMin] = transform(
+      [extent[0], extent[1]],
       CRS_VALUE.EPSG_3857,
       CRS_VALUE.EPSG_4326
     );
-    const maxRange = transform(
-      maxLonLat,
+    const [yMax, xMax] = transform(
+      [extent[2], extent[3]],
       CRS_VALUE.EPSG_3857,
       CRS_VALUE.EPSG_4326
     );
@@ -55,8 +53,8 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
     const newOptions = {
       ...options,
       range: {
-        xMinMax: [minRange[1], maxRange[1]],
-        yMinMax: [minRange[0], maxRange[0]],
+        xMinMax: [xMin, xMax],
+        yMinMax: [yMin, yMax],
       },
     };
     setOptions(columnProps.id, newOptions);
