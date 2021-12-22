@@ -1,5 +1,6 @@
 import { Map } from "@mui/icons-material";
 import { Grid, IconButton } from "@mui/material";
+import { Extent } from "ol/extent";
 import OLVectorLayer from "ol/layer/Vector";
 import { transform } from "ol/proj";
 import VectorSource from "ol/source/Vector";
@@ -20,9 +21,22 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
   const { setOptions } = useColumnProperty();
   const { getLayerById } = useMap();
   const [openMap, setOpenMap] = useState(false);
+  const [extent, setExtent] = useState<Extent | null>(null);
   const options = columnProps.options as IGisColumnOptions;
 
   const handleClickMap = () => {
+    const { xMinMax, yMinMax } = options.range;
+    const [yMin, xMin] = transform(
+      [yMinMax[0], xMinMax[0]],
+      CRS_VALUE.EPSG_4326,
+      CRS_VALUE.EPSG_3857
+    );
+    const [yMax, xMax] = transform(
+      [yMinMax[1], xMinMax[1]],
+      CRS_VALUE.EPSG_4326,
+      CRS_VALUE.EPSG_3857
+    );
+    setExtent([yMin, xMin, yMax, xMax]);
     setOpenMap(true);
   };
 
@@ -80,6 +94,7 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
       </Grid>
       <RangeInputMapDialog
         open={openMap}
+        extent={extent}
         handleOk={handleFullDialogOk}
         handleCancel={() => setOpenMap(false)}
       />

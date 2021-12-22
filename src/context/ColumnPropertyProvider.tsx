@@ -103,8 +103,8 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
   const createLatLonOptions = (): IGisColumnOptions => {
     return {
       range: {
-        xMinMax: [-90, 90],
-        yMinMax: [-180, 180],
+        xMinMax: [-50, 50],
+        yMinMax: [-100, 100],
       },
       crs: CRS_VALUE.EPSG_4326,
     };

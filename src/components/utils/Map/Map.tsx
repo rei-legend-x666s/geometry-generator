@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import * as ol from "ol";
+import { Extent } from "ol/extent";
 import { ReactNode, useEffect, useRef } from "react";
 import { useMap } from "../../../context/MapProvider";
 
@@ -7,10 +8,11 @@ interface MapProps {
   children: ReactNode;
   zoom: number;
   center: number[];
+  extent?: Extent | null;
   height?: string;
 }
 
-const Map = ({ children, zoom, center, height }: MapProps) => {
+const Map = ({ children, zoom, center, extent, height }: MapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const { map, setMap } = useMap();
 
@@ -40,6 +42,14 @@ const Map = ({ children, zoom, center, height }: MapProps) => {
     map.getView().setCenter(center);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [center]);
+
+  useEffect(() => {
+    if (!map || !extent) return;
+    map.getView().fit(extent, {
+      duration: 1000,
+      padding: [50, 50, 50, 50],
+    });
+  }, [extent, map]);
 
   return (
     <Box
