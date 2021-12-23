@@ -1,5 +1,5 @@
 import { Map } from "@mui/icons-material";
-import { Grid, IconButton } from "@mui/material";
+import { Grid, IconButton, InputLabel } from "@mui/material";
 import { Extent } from "ol/extent";
 import OLVectorLayer from "ol/layer/Vector";
 import { transform } from "ol/proj";
@@ -81,15 +81,30 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
 
   return (
     <>
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <LatLongRangeSlider columnProps={columnProps} isLatitude={true} />
-          <LatLongRangeSlider columnProps={columnProps} isLatitude={false} />
+      <Grid container alignItems="center" spacing={2}>
+        <Grid item xs={7}>
+          <LatLongRangeSlider
+            columnProps={columnProps}
+            isLatitude={true}
+            labelName="latitude"
+          />
+          <LatLongRangeSlider
+            columnProps={columnProps}
+            isLatitude={false}
+            labelName="longitude"
+          />
         </Grid>
-        <Grid item xs={6}>
-          <IconButton aria-label="map" color="inherit" onClick={handleClickMap}>
-            <Map />
-          </IconButton>
+        <Grid item xs={1}>
+          <Grid container justifyContent="center">
+            <InputLabel sx={{ color: "inherit" }}>From Map</InputLabel>
+            <IconButton
+              aria-label="map"
+              color="inherit"
+              onClick={handleClickMap}
+            >
+              <Map fontSize="large" />
+            </IconButton>
+          </Grid>
         </Grid>
       </Grid>
       <RangeInputMapDialog

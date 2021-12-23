@@ -1,4 +1,11 @@
-import { Box, FormGroup, InputLabel, Slider, TextField } from "@mui/material";
+import {
+  Box,
+  FormGroup,
+  Grid,
+  InputLabel,
+  Slider,
+  TextField,
+} from "@mui/material";
 import { CRS_VALUE } from "../../constants/utils";
 import { useColumnProperty } from "../../context/ColumnPropertyProvider";
 import { IColumnProperties, IGisColumnOptions } from "../../types/general";
@@ -6,11 +13,13 @@ import { IColumnProperties, IGisColumnOptions } from "../../types/general";
 interface GisColumnOptionFormProps {
   columnProps: IColumnProperties;
   isLatitude: boolean;
+  labelName?: string;
 }
 
 const LatLongRangeSlider = ({
   columnProps,
   isLatitude,
+  labelName = "Range",
 }: GisColumnOptionFormProps) => {
   const { id, options } = columnProps;
   const { range } = options as IGisColumnOptions;
@@ -46,13 +55,18 @@ const LatLongRangeSlider = ({
 
   return (
     <Box sx={{ m: 1 }}>
-      <FormGroup row sx={{ textAlign: "center" }}>
-        <InputLabel sx={{ mx: 1 }}>Range</InputLabel>
+      <Grid container alignItems="center">
+        <InputLabel
+          title={labelName}
+          sx={{ mx: 1, width: 80, color: "inherit" }}
+        >
+          {labelName}
+        </InputLabel>
         <TextField value={minMax[0]} size="small" sx={{ mx: 1 }} />
         <span>~</span>
         <TextField value={minMax[1]} size="small" sx={{ mx: 1 }} />
-      </FormGroup>
-      <FormGroup row sx={{ width: 500 }}>
+      </Grid>
+      <FormGroup row sx={{ width: "100%" }}>
         <Slider
           value={minMax}
           onChange={handleChangeRange}
