@@ -12,7 +12,7 @@ import { IDummyDataSet } from "../../types/general";
 import DataViewTableCell from "./DataViewTableCell";
 
 interface DataListTableProps {
-  dataSet?: IDummyDataSet;
+  dataSet: IDummyDataSet;
 }
 
 const DataListTable = ({ dataSet }: DataListTableProps) => {
@@ -34,7 +34,7 @@ const DataListTable = ({ dataSet }: DataListTableProps) => {
         <Table>
           <TableHead>
             <TableRow>
-              {dataSet?.columnPropsList.map(({ id, name }) => (
+              {dataSet.columnPropsList.map(({ id, name }) => (
                 <TableCell
                   key={id}
                   align="center"
@@ -49,11 +49,11 @@ const DataListTable = ({ dataSet }: DataListTableProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataSet?.records
+            {dataSet.records
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((dataRecord) => (
                 <TableRow key={dataRecord.id}>
-                  {dataSet?.columnPropsList.map((columnProp) => {
+                  {dataSet.columnPropsList.map((columnProp) => {
                     const data = dataRecord.record.find(
                       (dataProps) => dataProps.id === columnProp.id
                     )!.data;
@@ -66,23 +66,19 @@ const DataListTable = ({ dataSet }: DataListTableProps) => {
                     );
                   })}
                 </TableRow>
-              )) || ""}
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
-      {dataSet ? (
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={dataSet.records.length}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      ) : (
-        ""
-      )}
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={dataSet.records.length}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </>
   );
 };
