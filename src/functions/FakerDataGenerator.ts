@@ -62,6 +62,9 @@ class FakerDataGenerator {
   createData = ({ dataFormat, options }: IColumnProperties) => {
     let data = null;
     switch (dataFormat) {
+      case DATA_TYPE_VALUE.NONE:
+        data = null;
+        break;
       case DATA_TYPE_VALUE.FIRST_NAME:
         data = this.createFirstName();
         break;

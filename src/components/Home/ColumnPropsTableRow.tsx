@@ -80,12 +80,9 @@ const ColumnPropsTableRow = ({
               "dataFormat"
             )}
           >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {COLUMN_FORMAT_LIST.map((dataFormat) => (
-              <MenuItem key={dataFormat.value} value={dataFormat.value}>
-                {dataFormat.label}
+            {COLUMN_FORMAT_LIST.map(({ label, value }) => (
+              <MenuItem key={value} value={value}>
+                {value === DATA_TYPE_VALUE.NONE ? <em>{label}</em> : label}
               </MenuItem>
             ))}
           </TextField>

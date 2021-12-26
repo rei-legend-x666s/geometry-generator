@@ -37,7 +37,7 @@ type ColumnPropertyProviderProps = {
 const createInitColumnProperty = (): IColumnProperties => ({
   id: uuidV4().toString(),
   name: "",
-  dataFormat: null,
+  dataFormat: DATA_TYPE_VALUE.NONE,
   options: {},
 });
 

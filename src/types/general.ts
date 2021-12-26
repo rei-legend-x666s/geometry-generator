@@ -12,7 +12,7 @@ export interface IMenuItem {
 export interface IColumnProperties {
   id: string;
   name: string;
-  dataFormat: DATA_TYPE_VALUE | null;
+  dataFormat: DATA_TYPE_VALUE;
   options: IDefaultColumnOptions | IGisColumnOptions;
 }
 
