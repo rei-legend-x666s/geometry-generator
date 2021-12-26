@@ -20,6 +20,7 @@ import { DATE_FORMAT } from "../../constants/utils";
 import { useDummyData } from "../../context/DummyDataProvider";
 import MapProvider from "../../context/MapProvider";
 import { formatFromISO } from "../../functions/dateUtils";
+import { createFeaturePropsFromRecord } from "../../functions/gisUtils";
 import FullScreenDialog from "../utils/FullScreenDialog";
 import Controls from "../utils/Map/Controls/Controls";
 import ZoomControl from "../utils/Map/Controls/ZoomControl";
@@ -27,6 +28,7 @@ import Layers from "../utils/Map/Layers/Layers";
 import TileLayer from "../utils/Map/Layers/TileLayer";
 import VectorLayer from "../utils/Map/Layers/VectorLayer";
 import Map from "../utils/Map/Map";
+import PopupControl from "../utils/Map/PopupControl";
 import osm from "../utils/Map/Source/osm";
 import vector from "../utils/Map/Source/vector";
 import { styles } from "../utils/Map/Styles/styles";
@@ -75,28 +77,35 @@ const MapPanel = () => {
               case DATA_TYPE_VALUE.GEOMETRY_POINT:
                 return [idx1];
               default:
-                return [];
+                return idxList;
             }
           },
           []
         );
-        const latLonArray =
+        const featureInfo =
           geoIndexList.length > 0
             ? dataSet.records.map(({ record }) => {
-                if (geoIndexList.length === 1) {
-                  return record[geoIndexList[0]].data as number[];
-                } else {
-                  return [
-                    record[geoIndexList[0]].data as number,
-                    record[geoIndexList[1]].data as number,
-                  ];
-                }
+                const latLon =
+                  geoIndexList.length === 1
+                    ? (record[geoIndexList[0]].data as number[])
+                    : [
+                        record[geoIndexList[0]].data as number,
+                        record[geoIndexList[1]].data as number,
+                      ];
+                return {
+                  props: createFeaturePropsFromRecord(
+                    dataSet.columnPropsList,
+                    record
+                  ),
+                  latLon,
+                };
               })
             : [];
-        const features = latLonArray.map((latLon) => {
+        const features = featureInfo.map(({ props, latLon }) => {
           const feature = new Feature({
             geometry: new Point(fromLonLat([latLon[1], latLon[0]])),
           });
+          feature.setProperties(props);
           feature.setStyle(styles.point);
           return feature;
         });
@@ -179,6 +188,7 @@ const MapPanel = () => {
             ))}
           </Layers>
           <Controls>
+            <PopupControl />
             <ZoomControl />
           </Controls>
         </Map>

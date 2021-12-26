@@ -1,5 +1,10 @@
 import { DATA_TYPE_VALUE } from "../constants/column-format";
-import { DummyData, IDummyDataSet } from "../types/general";
+import {
+  DummyData,
+  IColumnProperties,
+  IDummyDataProps,
+  IDummyDataSet,
+} from "../types/general";
 
 const getIndexLatLonDataType = ({
   columnPropsList,
@@ -32,4 +37,21 @@ const geometryPointFormatter = (data: DummyData) => {
   return `${data[0]}, ${data[1]}`;
 };
 
-export { getIndexLatLonDataType, isGeometryDataType, geometryPointFormatter };
+const createFeaturePropsFromRecord = (
+  columnPropsList: IColumnProperties[],
+  record: IDummyDataProps[]
+) => {
+  return columnPropsList.reduce((featureProps, { name, options }, idx) => {
+    featureProps[name] = options.formatter
+      ? options.formatter(record[idx].data)
+      : record[idx].data;
+    return featureProps;
+  }, {} as { [key: string]: any });
+};
+
+export {
+  getIndexLatLonDataType,
+  isGeometryDataType,
+  geometryPointFormatter,
+  createFeaturePropsFromRecord,
+};
