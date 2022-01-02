@@ -14,6 +14,7 @@ import {
 } from "../../constants/column-format";
 import MapProvider from "../../context/MapProvider";
 import { IColumnProperties } from "../../types/general";
+import DatetimeOptions from "./DatetimeOptions";
 import GisColumnOptions from "./GisColumnOptions";
 import LatLongRangeSlider from "./LatLongRangeSlider";
 
@@ -51,6 +52,8 @@ const ColumnPropsTableRow = ({
             <GisColumnOptions columnProps={columnProperty} />
           </MapProvider>
         );
+      case DATA_TYPE_VALUE.DATETIME:
+        return <DatetimeOptions columnProps={columnProperty} />;
     }
   };
 

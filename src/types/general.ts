@@ -13,11 +13,19 @@ export interface IColumnProperties {
   id: string;
   name: string;
   dataFormat: DATA_TYPE_VALUE;
-  options: IDefaultColumnOptions | IGisColumnOptions;
+  options: IDefaultColumnOptions | IDatetimeColumnOptions | IGisColumnOptions;
 }
 
 export interface IDefaultColumnOptions {
   formatter?: (data: DummyData) => string;
+}
+
+export interface IDatetimeColumnOptions {
+  range: {
+    min: number | null;
+    max: number | null;
+  };
+  format: string;
 }
 
 export interface IGisColumnOptions {

@@ -1,7 +1,14 @@
+import { format } from "date-fns";
 import * as fakerLib from "faker";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
-import { IColumnProperties, IGisColumnOptions, Locale } from "../types/general";
+import {
+  IColumnProperties,
+  IDatetimeColumnOptions,
+  IGisColumnOptions,
+  Locale,
+} from "../types/general";
 import RandomGenerator from "./RandomGenerator";
+import { isDatetimeOptions } from "./customTypeGaurd";
 
 export interface IFakerDataGeneratorOptions {
   randomSeed: number;
@@ -42,6 +49,18 @@ class FakerDataGenerator {
     { range: { yMinMax } }: IGisColumnOptions
   ) => {
     return this.shiftRange(randomNumber, yMinMax[0], yMinMax[1]);
+  };
+
+  createDatetime = (options: IDatetimeColumnOptions) => {
+    const {
+      range: { min, max },
+    } = options;
+    const opt = {
+      min: min ? min : undefined,
+      max: max ? max : undefined,
+    };
+    const date = this.faker.datatype.datetime(opt);
+    return format(date, options.format);
   };
 
   createPointGeometry = (
@@ -89,6 +108,10 @@ class FakerDataGenerator {
           this.randomGenerator.next(),
           options as IGisColumnOptions
         );
+        break;
+      case DATA_TYPE_VALUE.DATETIME:
+        if (!isDatetimeOptions(options)) return;
+        data = this.createDatetime(options);
         break;
     }
     return data;

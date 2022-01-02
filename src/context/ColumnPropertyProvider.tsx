@@ -7,10 +7,11 @@ import {
 } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
-import { CRS_VALUE } from "../constants/utils";
+import { CRS_VALUE, DATE_FORMAT } from "../constants/utils";
 import { geometryPointFormatter } from "../functions/gisUtils";
 import {
   IColumnProperties,
+  IDatetimeColumnOptions,
   IDefaultColumnOptions,
   IGisColumnOptions,
 } from "../types/general";
@@ -20,7 +21,10 @@ type ColumnPropertyContextProps = {
   addColumnProperties: () => void;
   deleteColumnProperties: (id: string) => void;
   clearColumnProperties: () => void;
-  setOptions: (id: string, options: IGisColumnOptions) => void;
+  setOptions: (
+    id: string,
+    options: IGisColumnOptions | IDatetimeColumnOptions
+  ) => void;
   handleChangeColumnProperty: (
     id: string,
     prop: keyof IColumnProperties
@@ -58,7 +62,10 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
     setColumnProperties([createInitColumnProperty()]);
   };
 
-  const setOptions = (id: string, options: IGisColumnOptions) => {
+  const setOptions = (
+    id: string,
+    options: IGisColumnOptions | IDatetimeColumnOptions
+  ) => {
     setColumnProperties(
       columnProperties.map((columnProperties) =>
         columnProperties.id === id
@@ -95,6 +102,8 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
         const options = createLatLonOptions();
         options.formatter = geometryPointFormatter;
         return options;
+      case DATA_TYPE_VALUE.DATETIME:
+        return createDatetimeOptions();
       default:
         return createDefaultOptions();
     }
@@ -107,6 +116,16 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
         yMinMax: [-100, 100],
       },
       crs: CRS_VALUE.EPSG_4326,
+    };
+  };
+
+  const createDatetimeOptions = (): IDatetimeColumnOptions => {
+    return {
+      range: {
+        min: null,
+        max: null,
+      },
+      format: DATE_FORMAT.TYPE2,
     };
   };
 

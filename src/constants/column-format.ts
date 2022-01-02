@@ -7,6 +7,7 @@ export const DATA_TYPE_VALUE = {
   LATITUDE: 3,
   LONGITUDE: 4,
   GEOMETRY_POINT: 5,
+  DATETIME: 6,
 } as const;
 
 export type DATA_TYPE_VALUE =
@@ -36,5 +37,9 @@ export const COLUMN_FORMAT_LIST: IColumnDataFormat[] = [
   {
     label: "Geometry(Point)",
     value: DATA_TYPE_VALUE.GEOMETRY_POINT,
+  },
+  {
+    label: "Datetime",
+    value: DATA_TYPE_VALUE.DATETIME,
   },
 ];
