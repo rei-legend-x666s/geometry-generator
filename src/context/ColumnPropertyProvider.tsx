@@ -103,7 +103,9 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
         options.formatter = geometryPointFormatter;
         return options;
       case DATA_TYPE_VALUE.DATETIME:
-        return createDatetimeOptions();
+        return createDatetimeOptions(DATE_FORMAT.TYPE2);
+      case DATA_TYPE_VALUE.DATE:
+        return createDatetimeOptions(DATE_FORMAT.TYPE3);
       default:
         return createDefaultOptions();
     }
@@ -119,13 +121,13 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
     };
   };
 
-  const createDatetimeOptions = (): IDatetimeColumnOptions => {
+  const createDatetimeOptions = (format: string): IDatetimeColumnOptions => {
     return {
       range: {
         min: null,
         max: null,
       },
-      format: DATE_FORMAT.TYPE2,
+      format,
     };
   };
 

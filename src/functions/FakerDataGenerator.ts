@@ -110,6 +110,7 @@ class FakerDataGenerator {
         );
         break;
       case DATA_TYPE_VALUE.DATETIME:
+      case DATA_TYPE_VALUE.DATE:
         if (!isDatetimeOptions(options)) return;
         data = this.createDatetime(options);
         break;

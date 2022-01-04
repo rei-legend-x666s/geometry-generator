@@ -53,6 +53,7 @@ const ColumnPropsTableRow = ({
           </MapProvider>
         );
       case DATA_TYPE_VALUE.DATETIME:
+      case DATA_TYPE_VALUE.DATE:
         return <DatetimeOptions columnProps={columnProperty} />;
     }
   };
