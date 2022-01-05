@@ -1,80 +1,57 @@
-import { DatePicker, DateTimePicker } from "@mui/lab";
-import { Grid, TextField, TextFieldProps } from "@mui/material";
+import { Grid } from "@mui/material";
 import { DATA_TYPE_VALUE } from "../../constants/column-format";
 import { useColumnProperty } from "../../context/ColumnPropertyProvider";
 import { isDatetimeOptions } from "../../functions/customTypeGaurd";
 import { IColumnProperties } from "../../types/general";
+import DatetimePickerWrapper from "./DatetimePickerWrapper";
 
 interface IDateRangePickerWrapper {
   columnProps: IColumnProperties;
 }
 
-const DateRangePickerWrapper = ({
-  columnProps: { id, dataFormat, options },
-}: IDateRangePickerWrapper) => {
+const DateRangePickerWrapper = ({ columnProps }: IDateRangePickerWrapper) => {
   const { setOptions } = useColumnProperty();
+  const { id, dataFormat, options } = columnProps;
 
   if (!isDatetimeOptions(options)) return null;
 
-  const datePicker = (isMin: boolean) => {
-    const textField = (props: TextFieldProps) => (
-      <TextField
-        {...props}
-        size="small"
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-    );
+  const handleChangeDate = (newDate: Date | null, isMin: boolean) => {
+    const newOptions = { ...options };
+    newOptions.range[isMin ? "min" : "max"] = newDate?.getTime() || null;
+    setOptions(id, newOptions);
+  };
 
-    const handleChangeMinDate = (newDate: Date | null) => {
-      const newOptions = { ...options };
-      newOptions.range.min = newDate?.getTime() || null;
-      setOptions(id, newOptions);
-    };
-
-    const handleChangeMaxDate = (newDate: Date | null) => {
-      const newOptions = { ...options };
-      newOptions.range.max = newDate?.getTime() || null;
-      setOptions(id, newOptions);
-    };
-
+  const datePickerType = () => {
     switch (dataFormat) {
-      case DATA_TYPE_VALUE.DATETIME:
-        return (
-          <DateTimePicker
-            label={isMin ? "Min" : "Max"}
-            inputFormat={options.format}
-            value={isMin ? options.range.min : options.range.max}
-            onChange={isMin ? handleChangeMinDate : handleChangeMaxDate}
-            renderInput={textField}
-          />
-        );
       case DATA_TYPE_VALUE.DATE:
-        return (
-          <DatePicker
-            label={isMin ? "Min" : "Max"}
-            inputFormat={options.format}
-            value={isMin ? options.range.min : options.range.max}
-            onChange={isMin ? handleChangeMinDate : handleChangeMaxDate}
-            renderInput={textField}
-          />
-        );
+        return "date";
       default:
-        return null;
+        return "datetime";
     }
   };
 
   return (
     <>
       <Grid item xs={3}>
-        {datePicker(false)}
+        <DatetimePickerWrapper
+          type={datePickerType()}
+          label="Min"
+          inputFormat={options.format}
+          value={options.range.min}
+          onChange={(newDate) => handleChangeDate(newDate, true)}
+        />
       </Grid>
       <Grid item xs={1}>
         ~
       </Grid>
       <Grid item xs={3}>
-        {datePicker(true)}
+        <DatetimePickerWrapper
+          type={datePickerType()}
+          label="Max"
+          inputFormat={options.format}
+          value={options.range.max}
+          onChange={(newDate) => handleChangeDate(newDate, false)}
+        />
       </Grid>
     </>
   );
