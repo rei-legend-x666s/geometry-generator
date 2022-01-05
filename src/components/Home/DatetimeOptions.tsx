@@ -31,6 +31,7 @@ const DatetimeOptions = ({ columnProps }: IDatetimeOptions) => {
           <TextField
             label="Format"
             defaultValue={options.format}
+            value={options.format}
             onChange={handleChangeFormat}
             size="small"
             variant="standard"
