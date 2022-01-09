@@ -13,9 +13,10 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { NEW_LINE_CODE } from "../../constants/utils";
 import convertCsvText from "../../functions/csvUtils";
+import { useChecked } from "../../hooks/hooks";
 import { IDummyDataSet } from "../../types/general";
 
 interface DataListCsvTextFieldProps {
@@ -24,7 +25,8 @@ interface DataListCsvTextFieldProps {
 
 const DataListCsvTextField = ({ dataSet }: DataListCsvTextFieldProps) => {
   const [csvText, setCsvText] = useState<string>("");
-  const [needHeader, setNeedHeader] = useState<boolean>(false);
+  const [needSerialNumberProps] = useChecked(false);
+  const [needHeaderProps] = useChecked(false);
   const [newLineCodeLabel, setNewLineCodeLabel] = useState<string>(
     NEW_LINE_CODE.LF.label
   );
@@ -35,18 +37,13 @@ const DataListCsvTextField = ({ dataSet }: DataListCsvTextFieldProps) => {
     setNewLineCodeLabel(value);
   };
 
-  const handleChangeNeedHeader = ({
-    target: { checked },
-  }: ChangeEvent<HTMLInputElement>) => {
-    setNeedHeader(checked);
-  };
-
   const convertCsvTextValue = () => {
     const newLineCode = (NEW_LINE_CODE as any)[newLineCodeLabel].code;
     const textData =
       dataSet?.columnPropsList && dataSet?.records
         ? convertCsvText(dataSet.columnPropsList, dataSet.records, {
-            needHeader,
+            needSerial: needSerialNumberProps.checked,
+            needHeader: needHeaderProps.checked,
             newLineCode,
           })
         : "";
@@ -58,13 +55,12 @@ const DataListCsvTextField = ({ dataSet }: DataListCsvTextFieldProps) => {
       <Grid item xs={12} sx={{ p: 2 }}>
         <FormGroup row>
           <FormControlLabel
-            control={
-              <Checkbox
-                size="small"
-                checked={needHeader}
-                onChange={handleChangeNeedHeader}
-              />
-            }
+            control={<Checkbox {...needSerialNumberProps} size="small" />}
+            label="Serial"
+            sx={{ mx: 2 }}
+          />
+          <FormControlLabel
+            control={<Checkbox {...needHeaderProps} size="small" />}
             label="Header"
             sx={{ mx: 2 }}
           />
