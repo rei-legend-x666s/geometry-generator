@@ -11,10 +11,10 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import { ChangeEvent, useState } from "react";
 import { NATURAL_NUMBER } from "../../constants/regex-constant";
 import { useColumnProperty } from "../../context/ColumnPropertyProvider";
 import { useDummyData } from "../../context/DummyDataProvider";
+import { useInput } from "../../hooks/hooks";
 import Title from "../utils/Title";
 import ColumnPropsTableRow from "./ColumnPropsTableRow";
 
@@ -29,21 +29,15 @@ const ColumnPropertiesForm = () => {
 
   const { createDummyDataRecords } = useDummyData();
 
-  const [dataSetName, setDataSetName] = useState("");
-  const [rowCount, setRowCount] = useState(1);
-  const [isRowCountInputError, setIsRowCountInputError] = useState(false);
-
-  const handleChangeDataSetName = (event: ChangeEvent<HTMLInputElement>) => {
-    setDataSetName(event.target.value);
-  };
-
-  const handleChangeRowCount = (event: ChangeEvent<HTMLInputElement>) => {
-    setIsRowCountInputError(!NATURAL_NUMBER.test(event.target.value));
-    setRowCount(Number(event.target.value));
-  };
+  const [dataSetNameProps] = useInput("");
+  const [rowCountProps] = useInput("1", (value) => NATURAL_NUMBER.test(value));
 
   const handleClickGenerate = () => {
-    createDummyDataRecords(columnProperties, dataSetName, rowCount);
+    createDummyDataRecords(
+      columnProperties,
+      dataSetNameProps.value,
+      Number(rowCountProps.value)
+    );
   };
 
   return (
@@ -75,7 +69,7 @@ const ColumnPropertiesForm = () => {
             label="Data Set Name"
             variant="standard"
             size="small"
-            onChange={handleChangeDataSetName}
+            {...dataSetNameProps}
             InputLabelProps={{
               shrink: true,
             }}
@@ -83,13 +77,11 @@ const ColumnPropertiesForm = () => {
           />
           <TextField
             label="Row Count"
-            error={isRowCountInputError}
             type="number"
             variant="standard"
             size="small"
-            defaultValue={rowCount}
-            onChange={handleChangeRowCount}
-            helperText={isRowCountInputError ? "Input natural number" : " "}
+            {...rowCountProps}
+            helperText={rowCountProps.error ? "Input natural number" : " "}
             InputLabelProps={{
               shrink: true,
             }}

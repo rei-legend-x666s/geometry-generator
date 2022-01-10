@@ -1,5 +1,32 @@
 import { ChangeEvent, useState } from "react";
 
+interface useInputProps {
+  value: string;
+  error?: boolean;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+const useInput = (
+  initialValue: string,
+  isValidated?: (value: string) => boolean
+): [useInputProps, () => void] => {
+  const [value, setValue] = useState<string>(initialValue);
+  const [error, setError] = useState(false);
+  return [
+    {
+      value,
+      error: isValidated ? error : undefined,
+      onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        if (isValidated) {
+          setError(!isValidated(e.currentTarget.value));
+        }
+        setValue(e.currentTarget.value);
+      },
+    },
+    () => setValue(initialValue),
+  ];
+};
+
 interface useCheckedProps {
   checked: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -17,4 +44,4 @@ const useChecked = (initialValue: boolean): [useCheckedProps, () => void] => {
   ];
 };
 
-export { useChecked };
+export { useInput, useChecked };
