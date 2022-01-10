@@ -103,7 +103,7 @@ const DataListCsvTextField = ({ dataSet }: DataListCsvTextFieldProps) => {
             CONVERT
           </Button>
         </Grid>
-        <Grid item>
+        <Grid item sx={{ p: 2 }}>
           <Button
             variant="contained"
             color="primary"
