@@ -11,7 +11,7 @@ import RandomGenerator from "./RandomGenerator";
 import { isDatetimeOptions } from "./customTypeGaurd";
 
 export interface IFakerDataGeneratorOptions {
-  randomSeed: number;
+  seed: number;
   locale: Locale;
 }
 
@@ -23,9 +23,10 @@ class FakerDataGenerator {
     this.faker = fakerLib;
     this.randomGenerator = new RandomGenerator();
     if (options) {
-      const { randomSeed, locale } = options;
-      if (randomSeed) {
-        this.faker.seed(randomSeed);
+      const { seed, locale } = options;
+      if (seed) {
+        this.randomGenerator = new RandomGenerator(seed);
+        this.faker.seed(seed);
       }
       if (locale) {
         this.faker.setLocale(locale);

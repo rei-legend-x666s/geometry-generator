@@ -10,13 +10,25 @@ import {
   TableHead,
   TableRow,
   TextField,
+  TextFieldProps,
 } from "@mui/material";
-import { NATURAL_NUMBER } from "../../constants/regex-constant";
+import { INTEGER, NATURAL_NUMBER } from "../../constants/regex-constant";
 import { useColumnProperty } from "../../context/ColumnPropertyProvider";
 import { useDummyData } from "../../context/DummyDataProvider";
 import { useInput } from "../../hooks/hooks";
 import Title from "../utils/Title";
 import ColumnPropsTableRow from "./ColumnPropsTableRow";
+
+const textFieldProps: TextFieldProps = {
+  variant: "standard",
+  size: "small",
+  InputLabelProps: {
+    shrink: true,
+  },
+  sx: {
+    mx: 1,
+  },
+};
 
 const ColumnPropertiesForm = () => {
   const {
@@ -31,12 +43,14 @@ const ColumnPropertiesForm = () => {
 
   const [dataSetNameProps] = useInput("");
   const [rowCountProps] = useInput("1", (value) => NATURAL_NUMBER.test(value));
+  const [seedProps] = useInput("", (value) => INTEGER.test(value));
 
   const handleClickGenerate = () => {
     createDummyDataRecords(
       columnProperties,
       dataSetNameProps.value,
-      Number(rowCountProps.value)
+      Number(rowCountProps.value),
+      seedProps.value ? Number(seedProps.value) : undefined
     );
   };
 
@@ -67,25 +81,20 @@ const ColumnPropertiesForm = () => {
         <Grid item>
           <TextField
             label="Data Set Name"
-            variant="standard"
-            size="small"
+            {...textFieldProps}
             {...dataSetNameProps}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            sx={{ mx: 1 }}
           />
           <TextField
             label="Row Count"
-            type="number"
-            variant="standard"
-            size="small"
+            {...textFieldProps}
             {...rowCountProps}
             helperText={rowCountProps.error ? "Input natural number" : " "}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            sx={{ mx: 1 }}
+          />
+          <TextField
+            label="Seed"
+            {...textFieldProps}
+            {...seedProps}
+            helperText={seedProps.error ? "Input integer" : " "}
           />
           <Button
             variant="contained"

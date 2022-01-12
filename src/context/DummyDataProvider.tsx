@@ -20,7 +20,8 @@ type DummyDataContextProps = {
   createDummyDataRecords: (
     columnProperties: IColumnProperties[],
     dataSetName: string,
-    rowCount: number
+    rowCount: number,
+    seed?: number
   ) => void;
   setViewDataSet: (id: string) => void;
   removeDataSet: (id: string) => void;
@@ -64,6 +65,7 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
   const createNewDataSet = (
     columnPropsList: IColumnProperties[] = [],
     dataSetName: string = "",
+    seed?: number,
     records: IDummyDataRecord[] = []
   ) => {
     return {
@@ -82,11 +84,13 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
   const createDummyDataRecords = (
     columnProperties: IColumnProperties[],
     dataSetName: string,
-    rowCount: number
+    rowCount: number,
+    seed?: number
   ) => {
     const newDataSet: IDummyDataSet = createNewDataSet(
       columnProperties,
-      dataSetName
+      dataSetName,
+      seed
     );
     setDummyDataSetList([...dummyDataSetList, newDataSet]);
 
@@ -99,6 +103,7 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
       id: newDataSet.id,
       columnPropertiesJson,
       rowCount,
+      seed,
     });
     setWorker(worker);
   };

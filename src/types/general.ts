@@ -59,6 +59,7 @@ export interface IDummyDataSet {
   name: string;
   columnPropsList: IColumnProperties[];
   records: IDummyDataRecord[];
+  seed?: number;
   createdAt: string;
 }
 
