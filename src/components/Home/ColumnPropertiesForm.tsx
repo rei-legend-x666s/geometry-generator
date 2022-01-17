@@ -1,7 +1,8 @@
-import { Add, Clear, PlayCircle } from "@mui/icons-material";
+import { Add, Clear, Close, PlayCircle } from "@mui/icons-material";
 import {
   Button,
   Grid,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -11,11 +12,14 @@ import {
   TableRow,
   TextField,
   TextFieldProps,
+  Toolbar,
 } from "@mui/material";
+import { useEffect } from "react";
 import { INTEGER, NATURAL_NUMBER } from "../../constants/regex-constant";
 import { useColumnProperty } from "../../context/ColumnPropertyProvider";
 import { useDummyData } from "../../context/DummyDataProvider";
 import { useInput } from "../../hooks/hooks";
+import { IDummyDataSet } from "../../types/general";
 import Title from "../utils/Title";
 import ColumnPropsTableRow from "./ColumnPropsTableRow";
 
@@ -30,9 +34,18 @@ const textFieldProps: TextFieldProps = {
   },
 };
 
-const ColumnPropertiesForm = () => {
+interface ColumnPropertiesFormProps {
+  closeSelf: () => void;
+  editingDataSet: IDummyDataSet;
+}
+
+const ColumnPropertiesForm = ({
+  closeSelf,
+  editingDataSet,
+}: ColumnPropertiesFormProps) => {
   const {
     columnProperties,
+    setColumnProps,
     addColumnProperties,
     deleteColumnProperties,
     clearColumnProperties,
@@ -41,12 +54,26 @@ const ColumnPropertiesForm = () => {
 
   const { createDummyDataRecords } = useDummyData();
 
-  const [dataSetNameProps] = useInput("");
-  const [rowCountProps] = useInput("1", (value) => NATURAL_NUMBER.test(value));
-  const [seedProps] = useInput("", (value) => INTEGER.test(value));
+  const [dataSetNameProps] = useInput(editingDataSet.name);
+  const [rowCountProps] = useInput(
+    editingDataSet.records.length.toString(),
+    (value) => NATURAL_NUMBER.test(value)
+  );
+  const [seedProps] = useInput(editingDataSet.seed?.toString() || "", (value) =>
+    INTEGER.test(value)
+  );
+
+  useEffect(() => {
+    setColumnProps(editingDataSet.columnPropsList);
+  }, [editingDataSet]);
+
+  const handleClickClose = () => {
+    closeSelf();
+  };
 
   const handleClickGenerate = () => {
     createDummyDataRecords(
+      editingDataSet.id,
       columnProperties,
       dataSetNameProps.value,
       Number(rowCountProps.value),
@@ -56,7 +83,13 @@ const ColumnPropertiesForm = () => {
 
   return (
     <Paper elevation={3} sx={{ p: 2 }}>
-      <Title>Column Properties</Title>
+      <Toolbar variant="dense" sx={{ p: "0!important" }}>
+        <Title>Column Properties</Title>
+        <div style={{ flexGrow: 1 }} />
+        <IconButton sx={{ p: 0 }} onClick={handleClickClose}>
+          <Close />
+        </IconButton>
+      </Toolbar>
       <Grid container justifyContent="space-between">
         <Grid item>
           <Button

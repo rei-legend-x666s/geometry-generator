@@ -1,5 +1,7 @@
 import {
+  Add,
   Delete,
+  Edit,
   RadioButtonChecked,
   RadioButtonUnchecked,
 } from "@mui/icons-material";
@@ -21,12 +23,38 @@ import { IDummyDataSet } from "../../types/general";
 import ConfirmDialog from "../utils/ConfirmDialog";
 import Title from "../utils/Title";
 
-const DataSetList = () => {
-  const { dummyDataSet, dummyDataSetList, setViewDataSet, removeDataSet } =
-    useDummyData();
-  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
+interface DataSetListProps {
+  showColPropFormPanel: () => void;
+  setEditingId: (id: string) => void;
+}
 
+const DataSetList = ({
+  showColPropFormPanel,
+  setEditingId,
+}: DataSetListProps) => {
+  const {
+    dummyDataSet,
+    dummyDataSetList,
+    createNewDataSet,
+    setViewDataSet,
+    addDataSet,
+    removeDataSet,
+  } = useDummyData();
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [targetingId, setTargetingId] = useState<string | null>(null);
+
+  const handleClickAddNewDataSet = () => {
+    const newDataSet = createNewDataSet();
+    addDataSet(newDataSet);
+    setEditingId(newDataSet.id);
+    showColPropFormPanel();
+  };
+
+  const handleClickEditDataSet = (id: string) => () => {
+    setEditingId(id);
+    showColPropFormPanel();
+  };
 
   const handleClickDelete = (id: string) => () => {
     setTargetingId(id);
@@ -63,10 +91,31 @@ const DataSetList = () => {
               <TableCell align="center">Name</TableCell>
               <TableCell align="center">Count</TableCell>
               <TableCell align="center">Created At</TableCell>
+              <TableCell align="center">Edit</TableCell>
               <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
+            <TableRow>
+              <TableCell colSpan={6}>
+                <IconButton
+                  aria-label="new data set"
+                  onClick={handleClickAddNewDataSet}
+                  sx={{ backgroundColor: "#f9f9f9", mx: 1 }}
+                >
+                  <Add color="primary" />
+                </IconButton>
+                <label
+                  color="inherit"
+                  style={{
+                    verticalAlign: "middle",
+                    fontSize: "large",
+                  }}
+                >
+                  New Data Set
+                </label>
+              </TableCell>
+            </TableRow>
             {dummyDataSetList.map((dataSet, idx) => (
               <TableRow key={dataSet.id}>
                 <TableCell component="th" scope="row">
@@ -91,6 +140,15 @@ const DataSetList = () => {
                 <TableCell align="center">{dataSet.records.length}</TableCell>
                 <TableCell align="center">
                   {formatFromISO(dataSet.createdAt, DATE_FORMAT.TYPE2)}
+                </TableCell>
+                <TableCell align="center">
+                  <IconButton
+                    aria-label="edit"
+                    color="primary"
+                    onClick={handleClickEditDataSet(dataSet.id)}
+                  >
+                    <Edit />
+                  </IconButton>
                 </TableCell>
                 <TableCell align="center">
                   <IconButton

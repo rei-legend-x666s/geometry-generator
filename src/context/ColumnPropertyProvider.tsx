@@ -18,6 +18,7 @@ import {
 
 type ColumnPropertyContextProps = {
   columnProperties: IColumnProperties[];
+  setColumnProps: (columnProperties: IColumnProperties[]) => void;
   addColumnProperties: () => void;
   deleteColumnProperties: (id: string) => void;
   clearColumnProperties: () => void;
@@ -49,6 +50,10 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
   const [columnProperties, setColumnProperties] = useState<IColumnProperties[]>(
     [createInitColumnProperty()]
   );
+
+  const setColumnProps = (columnProperties: IColumnProperties[]) => {
+    setColumnProperties(columnProperties);
+  };
 
   const addColumnProperties = () => {
     setColumnProperties([...columnProperties, createInitColumnProperty()]);
@@ -140,6 +145,7 @@ const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
       value={{
         columnProperties,
         addColumnProperties,
+        setColumnProps,
         deleteColumnProperties,
         clearColumnProperties,
         setOptions,

@@ -17,13 +17,16 @@ import {
 type DummyDataContextProps = {
   dummyDataSet: IDummyDataSet | undefined;
   dummyDataSetList: IDummyDataSet[];
+  createNewDataSet: () => IDummyDataSet;
   createDummyDataRecords: (
+    id: string,
     columnProperties: IColumnProperties[],
     dataSetName: string,
     rowCount: number,
     seed?: number
   ) => void;
   setViewDataSet: (id: string) => void;
+  addDataSet: (dataSet: IDummyDataSet) => void;
   removeDataSet: (id: string) => void;
 };
 
@@ -62,19 +65,28 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
     setDummyDataSetList(newDummyDataSetList);
   };
 
-  const createNewDataSet = (
-    columnPropsList: IColumnProperties[] = [],
-    dataSetName: string = "",
-    seed?: number,
-    records: IDummyDataRecord[] = []
+  const createDataSet = (
+    columnPropsList: IColumnProperties[],
+    dataSetName: string,
+    records: IDummyDataRecord[],
+    seed?: number
   ) => {
     return {
       id: uuidV4().toString(),
       name: dataSetName,
       columnPropsList,
       records,
+      seed,
       createdAt: format(new Date(), DATE_FORMAT.TYPE1),
     };
+  };
+
+  const createNewDataSet = () => {
+    return createDataSet([], "", []);
+  };
+
+  const addDataSet = (dataSet: IDummyDataSet) => {
+    setDummyDataSetList([...dummyDataSetList, dataSet]);
   };
 
   const removeDataSet = (id: string) => {
@@ -82,17 +94,24 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
   };
 
   const createDummyDataRecords = (
+    id: string,
     columnProperties: IColumnProperties[],
     dataSetName: string,
     rowCount: number,
     seed?: number
   ) => {
-    const newDataSet: IDummyDataSet = createNewDataSet(
-      columnProperties,
-      dataSetName,
-      seed
+    setDummyDataSetList(
+      dummyDataSetList.map((d) =>
+        d.id === id
+          ? {
+              ...d,
+              columnPropsList: columnProperties,
+              name: dataSetName,
+              seed,
+            }
+          : d
+      )
     );
-    setDummyDataSetList([...dummyDataSetList, newDataSet]);
 
     const columnPropertiesJson = JSON.stringify(columnProperties);
 
@@ -100,7 +119,7 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
       new URL("../functions/createDataWorker", import.meta.url)
     );
     worker.postMessage({
-      id: newDataSet.id,
+      id,
       columnPropertiesJson,
       rowCount,
       seed,
@@ -120,8 +139,10 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
       value={{
         dummyDataSet,
         dummyDataSetList,
+        createNewDataSet,
         createDummyDataRecords,
         setViewDataSet,
+        addDataSet,
         removeDataSet,
       }}
     >
