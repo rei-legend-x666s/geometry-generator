@@ -1,7 +1,12 @@
 import { SvgIconTypeMap } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { ReactNode } from "react";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
 import { CRS_VALUE } from "../constants/utils";
+
+export interface IProviderProps {
+  children: ReactNode;
+}
 
 export interface IMenuItem {
   name: string;

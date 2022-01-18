@@ -2,11 +2,11 @@ import * as ol from "ol";
 import {
   createContext,
   Dispatch,
-  ReactNode,
   SetStateAction,
   useContext,
   useState,
 } from "react";
+import { IProviderProps } from "../types/general";
 
 interface MapContextProps {
   map?: ol.Map;
@@ -17,11 +17,7 @@ interface MapContextProps {
 const MapContext = createContext({} as MapContextProps);
 export const useMap = () => useContext(MapContext);
 
-type MapProviderProps = {
-  children: ReactNode;
-};
-
-const MapProvider = ({ children }: MapProviderProps) => {
+const MapProvider = ({ children }: IProviderProps) => {
   const [map, setMap] = useState<ol.Map>();
 
   const getLayerById = <T extends unknown>(

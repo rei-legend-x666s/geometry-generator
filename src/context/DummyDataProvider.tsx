@@ -1,17 +1,12 @@
 import { format } from "date-fns";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { DATE_FORMAT } from "../constants/utils";
 import {
   IColumnProperties,
   IDummyDataRecord,
   IDummyDataSet,
+  IProviderProps,
 } from "../types/general";
 
 type DummyDataContextProps = {
@@ -33,11 +28,7 @@ type DummyDataContextProps = {
 const DummyDataContext = createContext({} as DummyDataContextProps);
 export const useDummyData = () => useContext(DummyDataContext);
 
-type DummyDataProviderProps = {
-  children: ReactNode;
-};
-
-const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
+const DummyDataProvider = ({ children }: IProviderProps) => {
   const [dummyDataSet, setDummyDataSet] = useState<IDummyDataSet>();
   const [dummyDataSetList, setDummyDataSetList] = useState<IDummyDataSet[]>([]);
   const [worker, setWorker] = useState<Worker>();

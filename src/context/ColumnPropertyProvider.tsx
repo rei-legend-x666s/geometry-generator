@@ -1,7 +1,6 @@
 import {
   ChangeEvent,
   createContext,
-  ReactNode,
   useContext,
   useState,
 } from "react";
@@ -14,6 +13,7 @@ import {
   IDatetimeColumnOptions,
   IDefaultColumnOptions,
   IGisColumnOptions,
+  IProviderProps,
 } from "../types/general";
 
 type ColumnPropertyContextProps = {
@@ -35,10 +35,6 @@ type ColumnPropertyContextProps = {
 const ColumnPropertyContext = createContext({} as ColumnPropertyContextProps);
 export const useColumnProperty = () => useContext(ColumnPropertyContext);
 
-type ColumnPropertyProviderProps = {
-  children: ReactNode;
-};
-
 const createInitColumnProperty = (): IColumnProperties => ({
   id: uuidV4().toString(),
   name: "",
@@ -46,7 +42,7 @@ const createInitColumnProperty = (): IColumnProperties => ({
   options: {},
 });
 
-const ColumnPropertyProvider = ({ children }: ColumnPropertyProviderProps) => {
+const ColumnPropertyProvider = ({ children }: IProviderProps) => {
   const [columnProperties, setColumnProperties] = useState<IColumnProperties[]>(
     [createInitColumnProperty()]
   );
