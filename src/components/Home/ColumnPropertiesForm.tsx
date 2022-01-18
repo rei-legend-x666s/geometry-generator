@@ -54,17 +54,17 @@ const ColumnPropertiesForm = ({
 
   const { createDummyDataRecords } = useDummyData();
 
-  const [dataSetNameProps] = useInput(editingDataSet.name);
-  const [rowCountProps] = useInput(
-    editingDataSet.records.length.toString(),
-    (value) => NATURAL_NUMBER.test(value)
+  const [dataSetNameProps, resetDataSetName] = useInput("");
+  const [rowCountProps, resetRowCount] = useInput("1", (value) =>
+    NATURAL_NUMBER.test(value)
   );
-  const [seedProps] = useInput(editingDataSet.seed?.toString() || "", (value) =>
-    INTEGER.test(value)
-  );
+  const [seedProps, resetSeed] = useInput("", (value) => INTEGER.test(value));
 
   useEffect(() => {
     setColumnProps(editingDataSet.columnPropsList);
+    resetDataSetName(editingDataSet.name);
+    resetRowCount(editingDataSet.rowCount.toString());
+    resetSeed(editingDataSet.seed?.toString() || "");
   }, [editingDataSet]);
 
   const handleClickClose = () => {

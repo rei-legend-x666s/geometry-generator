@@ -9,7 +9,7 @@ interface useInputProps {
 const useInput = (
   initialValue: string,
   isValidated?: (value: string) => boolean
-): [useInputProps, () => void] => {
+): [useInputProps, (value?: string) => void] => {
   const [value, setValue] = useState<string>(initialValue);
   const [error, setError] = useState(false);
   return [
@@ -23,7 +23,7 @@ const useInput = (
         setValue(e.currentTarget.value);
       },
     },
-    () => setValue(initialValue),
+    (value) => setValue(value || initialValue),
   ];
 };
 

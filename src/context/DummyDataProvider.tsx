@@ -68,6 +68,7 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
   const createDataSet = (
     columnPropsList: IColumnProperties[],
     dataSetName: string,
+    rowCount: number,
     records: IDummyDataRecord[],
     seed?: number
   ) => {
@@ -75,6 +76,7 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
       id: uuidV4().toString(),
       name: dataSetName,
       columnPropsList,
+      rowCount,
       records,
       seed,
       createdAt: format(new Date(), DATE_FORMAT.TYPE1),
@@ -82,7 +84,7 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
   };
 
   const createNewDataSet = () => {
-    return createDataSet([], "", []);
+    return createDataSet([], "", 1, []);
   };
 
   const addDataSet = (dataSet: IDummyDataSet) => {
@@ -107,6 +109,7 @@ const DummyDataProvider = ({ children }: DummyDataProviderProps) => {
               ...d,
               columnPropsList: columnProperties,
               name: dataSetName,
+              rowCount,
               seed,
             }
           : d
