@@ -7,6 +7,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import type { AppProps } from "next/app";
 import Layout from "../components/Layout/Layout";
 import DummyDataProvider from "../context/DummyDataProvider";
+import GlobalDataProvider from "../context/GlobalDataProvider";
 import createEmotionCache from "../styles/createEmotionCache";
 import { lightTheme } from "../styles/theme";
 import "../styles/Map.css";
@@ -26,11 +27,13 @@ function MyApp({
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={lightTheme}>
         <CssBaseline />
-        <DummyDataProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </DummyDataProvider>
+        <GlobalDataProvider>
+          <DummyDataProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </DummyDataProvider>
+        </GlobalDataProvider>
       </ThemeProvider>
     </CacheProvider>
   );

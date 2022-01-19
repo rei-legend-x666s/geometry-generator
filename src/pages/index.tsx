@@ -1,40 +1,43 @@
 import { Box, Collapse, Grid } from "@mui/material";
 import type { NextPage } from "next";
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ColumnPropertiesForm from "../components/Home/ColumnPropertiesForm";
 import DataSetList from "../components/Home/DataSetList";
 import CustomHead from "../components/utils/Head";
 import ColumnPropertyProvider from "../context/ColumnPropertyProvider";
 import { useDummyData } from "../context/DummyDataProvider";
+import { useGlobalData } from "../context/GlobalDataProvider";
+import { IDummyDataSet } from "../types/general";
 
 const Home: NextPage = () => {
+  const { isEditing, editingDataSetId, setEditingDataSetId } = useGlobalData();
   const { dummyDataSetList } = useDummyData();
-  const [showInputColPropsForm, setShowInputColPropsForm] = useState(false);
-  const [editingDataSetId, setEditingDataSetId] = useState("");
+  const [editingDataSet, setEditingDataSet] = useState<IDummyDataSet>();
 
-  const dataSet = useCallback(() => {
-    return dummyDataSetList.find(({ id }) => id === editingDataSetId);
+  useEffect(() => {
+    setEditingDataSet(dummyDataSetList.find((d) => d.id === editingDataSetId));
   }, [editingDataSetId]);
+
+  const closeColumnPropertiesForm = () => {
+    setEditingDataSetId("");
+  };
 
   return (
     <ColumnPropertyProvider>
       <CustomHead title="Home" />
       <Box width="100%">
-        <Collapse in={showInputColPropsForm}>
+        <Collapse in={isEditing}>
           <Grid item xs={12} sx={{ p: 2 }}>
-            {dataSet() && (
+            {editingDataSet && (
               <ColumnPropertiesForm
-                closeSelf={() => setShowInputColPropsForm(false)}
-                editingDataSet={dataSet()!}
+                closeSelf={closeColumnPropertiesForm}
+                editingDataSet={editingDataSet}
               />
             )}
           </Grid>
         </Collapse>
         <Grid item xs={12} sx={{ p: 2 }}>
-          <DataSetList
-            showColPropFormPanel={() => setShowInputColPropsForm(true)}
-            setEditingId={(id) => setEditingDataSetId(id)}
-          />
+          <DataSetList />
         </Grid>
       </Box>
     </ColumnPropertyProvider>

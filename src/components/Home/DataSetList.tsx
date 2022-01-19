@@ -18,20 +18,14 @@ import {
 import { useState } from "react";
 import { DATE_FORMAT } from "../../constants/utils";
 import { useDummyData } from "../../context/DummyDataProvider";
+import { useGlobalData } from "../../context/GlobalDataProvider";
 import { formatFromISO } from "../../functions/dateUtils";
 import { IDummyDataSet } from "../../types/general";
 import ConfirmDialog from "../utils/ConfirmDialog";
 import Title from "../utils/Title";
 
-interface DataSetListProps {
-  showColPropFormPanel: () => void;
-  setEditingId: (id: string) => void;
-}
-
-const DataSetList = ({
-  showColPropFormPanel,
-  setEditingId,
-}: DataSetListProps) => {
+const DataSetList = () => {
+  const { setEditingDataSetId } = useGlobalData();
   const {
     dummyDataSet,
     dummyDataSetList,
@@ -47,13 +41,11 @@ const DataSetList = ({
   const handleClickAddNewDataSet = () => {
     const newDataSet = createNewDataSet();
     addDataSet(newDataSet);
-    setEditingId(newDataSet.id);
-    showColPropFormPanel();
+    setEditingDataSetId(newDataSet.id);
   };
 
   const handleClickEditDataSet = (id: string) => () => {
-    setEditingId(id);
-    showColPropFormPanel();
+    setEditingDataSetId(id);
   };
 
   const handleClickDelete = (id: string) => () => {
