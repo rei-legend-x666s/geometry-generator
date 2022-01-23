@@ -1,5 +1,5 @@
+import * as fakerLib from "@faker-js/faker";
 import { format } from "date-fns";
-import * as fakerLib from "faker";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
 import {
   IColumnProperties,
@@ -20,7 +20,7 @@ class FakerDataGenerator {
   private randomGenerator: RandomGenerator;
 
   constructor(options?: Partial<IFakerDataGeneratorOptions>) {
-    this.faker = fakerLib;
+    this.faker = fakerLib.default;
     this.randomGenerator = new RandomGenerator();
     if (options) {
       const { seed, locale } = options;
