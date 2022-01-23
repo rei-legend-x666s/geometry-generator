@@ -3,7 +3,6 @@ import { Grid, IconButton, InputLabel } from "@mui/material";
 import { Extent } from "ol/extent";
 import OLVectorLayer from "ol/layer/Vector";
 import { transform } from "ol/proj";
-import VectorSource from "ol/source/Vector";
 import { useState } from "react";
 import { CRS_VALUE } from "../../constants/utils";
 import { useColumnProperty } from "../../context/ColumnPropertyProvider";
@@ -41,16 +40,11 @@ const GisColumnOptions = ({ columnProps }: GisColumnOptionsProps) => {
   };
 
   const setRange = () => {
-    const layer = getLayerById("dragBoxLayer", OLVectorLayer);
-    if (!layer) return;
-
-    const source = layer.getSource();
-    if (!(source instanceof VectorSource)) return;
-
-    const geometry = source.getFeatureById("box").getGeometry();
-    if (!geometry) return;
-
-    const extent = geometry.getExtent();
+    const extent = getLayerById("dragBoxLayer", OLVectorLayer)
+      ?.getSource()
+      .getFeatureById("box")
+      .getGeometry()
+      .getExtent();
     if (!extent || extent.length < 4) return;
 
     const [yMin, xMin] = transform(

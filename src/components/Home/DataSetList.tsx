@@ -33,7 +33,7 @@ const DataSetList = ({ openDialog }: DataSetListProps) => {
   const {
     dummyDataSet,
     dummyDataSetList,
-    createNewDataSet,
+    createDataSet,
     setViewDataSet,
     addDataSet,
     removeDataSet,
@@ -44,7 +44,7 @@ const DataSetList = ({ openDialog }: DataSetListProps) => {
 
   const setDataSet = (id?: string) => {
     if (!id) {
-      const newDataSet = createNewDataSet();
+      const newDataSet = createDataSet();
       addDataSet(newDataSet);
       id = newDataSet.id;
     }

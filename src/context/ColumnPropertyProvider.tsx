@@ -1,7 +1,7 @@
 import { ChangeEvent, createContext, useContext, useState } from "react";
-import { v4 as uuidV4 } from "uuid";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
 import { CRS_VALUE, DATE_FORMAT } from "../constants/utils";
+import { createInitColumnProperty } from "../functions/columnUtils";
 import { geometryPointFormatter } from "../functions/gisUtils";
 import {
   IColumnProperties,
@@ -29,13 +29,6 @@ type ColumnPropertyContextProps = {
 
 const ColumnPropertyContext = createContext({} as ColumnPropertyContextProps);
 export const useColumnProperty = () => useContext(ColumnPropertyContext);
-
-const createInitColumnProperty = (): IColumnProperties => ({
-  id: uuidV4().toString(),
-  name: "",
-  dataFormat: DATA_TYPE_VALUE.NONE,
-  options: {},
-});
 
 const ColumnPropertyProvider = ({ children }: IProviderProps) => {
   const [columnProperties, setColumnProperties] = useState<IColumnProperties[]>(

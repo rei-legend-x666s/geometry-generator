@@ -2,8 +2,9 @@ import { format } from "date-fns";
 import { createContext, useContext, useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { DATE_FORMAT } from "../constants/utils";
+import { createInitColumnProperty } from "../functions/columnUtils";
 import {
-  IColumnProperties,
+  IDataSetInputForm,
   IDummyDataRecord,
   IDummyDataSet,
   IProviderProps,
@@ -12,13 +13,10 @@ import {
 type DummyDataContextProps = {
   dummyDataSet: IDummyDataSet | undefined;
   dummyDataSetList: IDummyDataSet[];
-  createNewDataSet: () => IDummyDataSet;
+  createDataSet: () => IDummyDataSet;
   createDummyDataRecords: (
     id: string,
-    columnProperties: IColumnProperties[],
-    dataSetName: string,
-    rowCount: number,
-    seed?: number
+    dataSetInputForm: IDataSetInputForm
   ) => void;
   setViewDataSet: (id: string) => void;
   addDataSet: (dataSet: IDummyDataSet) => void;
@@ -43,38 +41,45 @@ const DummyDataProvider = ({ children }: IProviderProps) => {
     updateDataSetRecords(id, dummyDataRecords);
   };
 
+  const createDataWorker = (
+    id: string,
+    { columnPropsList, rowCount, seed }: IDataSetInputForm
+  ) => {
+    const worker: Worker = new Worker(
+      new URL("../functions/createDataWorker", import.meta.url)
+    );
+    worker.postMessage({
+      id,
+      columnPropertiesJson: JSON.stringify(columnPropsList),
+      rowCount,
+      seed,
+    });
+    return worker;
+  };
+
   const updateDataSetRecords = (
     id: string,
     dummyDataRecords: IDummyDataRecord[]
   ) => {
-    const newDummyDataSetList = dummyDataSetList.map((dataSet) => {
-      return dataSet.id === id
-        ? { ...dataSet, records: dummyDataRecords }
-        : dataSet;
-    });
+    const newDummyDataSetList = dummyDataSetList.map((dataSet) =>
+      dataSet.id === id ? { ...dataSet, records: dummyDataRecords } : dataSet
+    );
     setDummyDataSetList(newDummyDataSetList);
   };
 
-  const createDataSet = (
-    columnPropsList: IColumnProperties[],
-    dataSetName: string,
-    rowCount: number,
-    records: IDummyDataRecord[],
-    seed?: number
-  ) => {
-    return {
-      id: uuidV4().toString(),
-      name: dataSetName,
-      columnPropsList,
-      rowCount,
-      records,
-      seed,
-      createdAt: format(new Date(), DATE_FORMAT.TYPE1),
-    };
-  };
-
-  const createNewDataSet = () => {
-    return createDataSet([], "", 1, []);
+  const createDataSet = (dataSet?: Partial<IDummyDataSet>): IDummyDataSet => {
+    return Object.assign(
+      {
+        id: uuidV4().toString(),
+        name: "",
+        columnPropsList: [createInitColumnProperty()],
+        rowCount: 1,
+        records: [],
+        seed: undefined,
+        createdAt: format(new Date(), DATE_FORMAT.TYPE1),
+      },
+      dataSet
+    );
   };
 
   const addDataSet = (dataSet: IDummyDataSet) => {
@@ -87,36 +92,13 @@ const DummyDataProvider = ({ children }: IProviderProps) => {
 
   const createDummyDataRecords = (
     id: string,
-    columnProperties: IColumnProperties[],
-    dataSetName: string,
-    rowCount: number,
-    seed?: number
+    dataSetInputForm: IDataSetInputForm
   ) => {
-    setDummyDataSetList(
-      dummyDataSetList.map((d) =>
-        d.id === id
-          ? {
-              ...d,
-              columnPropsList: columnProperties,
-              name: dataSetName,
-              rowCount,
-              seed,
-            }
-          : d
-      )
+    const updatedDataSetList = dummyDataSetList.map((dataSet) =>
+      dataSet.id === id ? Object.assign(dataSet, dataSetInputForm) : dataSet
     );
-
-    const columnPropertiesJson = JSON.stringify(columnProperties);
-
-    const worker: Worker = new Worker(
-      new URL("../functions/createDataWorker", import.meta.url)
-    );
-    worker.postMessage({
-      id,
-      columnPropertiesJson,
-      rowCount,
-      seed,
-    });
+    setDummyDataSetList(updatedDataSetList);
+    const worker = createDataWorker(id, dataSetInputForm);
     setWorker(worker);
   };
 
@@ -132,7 +114,7 @@ const DummyDataProvider = ({ children }: IProviderProps) => {
       value={{
         dummyDataSet,
         dummyDataSetList,
-        createNewDataSet,
+        createDataSet,
         createDummyDataRecords,
         setViewDataSet,
         addDataSet,

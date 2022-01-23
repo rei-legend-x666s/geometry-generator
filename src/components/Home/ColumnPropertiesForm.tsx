@@ -74,13 +74,12 @@ const ColumnPropertiesForm = ({
   };
 
   const handleClickGenerate = () => {
-    createDummyDataRecords(
-      editingDataSet.id,
-      columnProperties,
-      dataSetNameProps.value,
-      Number(rowCountProps.value),
-      seedProps.value ? Number(seedProps.value) : undefined
-    );
+    createDummyDataRecords(editingDataSet.id, {
+      name: dataSetNameProps.value,
+      columnPropsList: columnProperties,
+      rowCount: Number(rowCountProps.value),
+      seed: seedProps.value ? Number(seedProps.value) : undefined,
+    });
     closeSelf();
   };
 

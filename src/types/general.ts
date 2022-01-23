@@ -69,4 +69,11 @@ export interface IDummyDataSet {
   createdAt: string;
 }
 
+export interface IDataSetInputForm {
+  name: string;
+  columnPropsList: IColumnProperties[];
+  rowCount: number;
+  seed?: number;
+}
+
 export type Locale = "ja" | "en";
