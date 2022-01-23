@@ -18,8 +18,13 @@ export interface IColumnProperties {
   id: string;
   name: string;
   dataFormat: DATA_TYPE_VALUE;
-  options: IDefaultColumnOptions | IDatetimeColumnOptions | IGisColumnOptions;
+  options: ColumnOptions;
 }
+
+export type ColumnOptions =
+  | IDefaultColumnOptions
+  | IDatetimeColumnOptions
+  | IGisColumnOptions;
 
 export interface IDefaultColumnOptions {
   formatter?: (data: DummyData) => string;
@@ -45,6 +50,7 @@ export interface IGisColumnOptions {
 export interface IColumnDataFormat {
   label: string;
   value: number;
+  options: ColumnOptions;
 }
 
 export interface IDummyDataProps {
@@ -59,13 +65,9 @@ export interface IDummyDataRecord {
   record: IDummyDataProps[];
 }
 
-export interface IDummyDataSet {
+export interface IDummyDataSet extends IDataSetInputForm {
   id: string;
-  name: string;
-  columnPropsList: IColumnProperties[];
-  rowCount: number;
   records: IDummyDataRecord[];
-  seed?: number;
   createdAt: string;
 }
 

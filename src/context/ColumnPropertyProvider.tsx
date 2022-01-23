@@ -1,14 +1,15 @@
 import { ChangeEvent, createContext, useContext, useState } from "react";
-import { DATA_TYPE_VALUE } from "../constants/column-format";
-import { CRS_VALUE, DATE_FORMAT } from "../constants/utils";
+import {
+  COLUMN_FORMAT_LIST,
+  DATA_TYPE_VALUE,
+} from "../constants/column-format";
 import { createInitColumnProperty } from "../functions/columnUtils";
-import { geometryPointFormatter } from "../functions/gisUtils";
 import {
   IColumnProperties,
   IDatetimeColumnOptions,
-  IDefaultColumnOptions,
   IGisColumnOptions,
   IProviderProps,
+  ColumnOptions,
 } from "../types/general";
 
 type ColumnPropertyContextProps = {
@@ -51,77 +52,40 @@ const ColumnPropertyProvider = ({ children }: IProviderProps) => {
     setColumnProperties([createInitColumnProperty()]);
   };
 
-  const setOptions = (
-    id: string,
-    options: IGisColumnOptions | IDatetimeColumnOptions
-  ) => {
-    setColumnProperties(
-      columnProperties.map((columnProperties) =>
-        columnProperties.id === id
-          ? { ...columnProperties, options }
-          : columnProperties
-      )
+  const setOptions = (id: string, options: ColumnOptions) => {
+    const updatedColumnProps = columnProperties.map((columnPros) =>
+      columnPros.id === id ? { ...columnPros, options } : columnPros
     );
+    setColumnProperties(updatedColumnProps);
   };
 
   const handleChangeColumnProperty =
     (id: string, prop: keyof IColumnProperties) =>
     ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-      setColumnProperties(
-        columnProperties.map((columnProperties) =>
-          columnProperties.id === id
-            ? prop === "dataFormat"
-              ? {
-                  ...columnProperties,
-                  dataFormat: Number(value) as DATA_TYPE_VALUE,
-                  options: createOptions(Number(value) as DATA_TYPE_VALUE),
-                }
-              : { ...columnProperties, [prop]: value }
-            : columnProperties
-        )
+      const columnPropsList = columnProperties.map((columnProp) =>
+        columnProp.id === id
+          ? prop === "dataFormat"
+            ? createDataFormatProps(value, columnProp)
+            : {
+                ...columnProp,
+                [prop]: value,
+              }
+          : columnProp
       );
+      setColumnProperties(columnPropsList);
     };
 
-  const createOptions = (dataFormat: DATA_TYPE_VALUE) => {
-    switch (dataFormat) {
-      case DATA_TYPE_VALUE.LATITUDE:
-      case DATA_TYPE_VALUE.LONGITUDE:
-        return createLatLonOptions();
-      case DATA_TYPE_VALUE.GEOMETRY_POINT:
-        const options = createLatLonOptions();
-        options.formatter = geometryPointFormatter;
-        return options;
-      case DATA_TYPE_VALUE.DATETIME:
-        return createDatetimeOptions(DATE_FORMAT.TYPE2);
-      case DATA_TYPE_VALUE.DATE:
-        return createDatetimeOptions(DATE_FORMAT.TYPE3);
-      default:
-        return createDefaultOptions();
-    }
-  };
-
-  const createLatLonOptions = (): IGisColumnOptions => {
+  const createDataFormatProps = (value: string, props: IColumnProperties) => {
+    const dataFormat = Number(value) as DATA_TYPE_VALUE;
     return {
-      range: {
-        xMinMax: [-50, 50],
-        yMinMax: [-100, 100],
-      },
-      crs: CRS_VALUE.EPSG_4326,
+      ...props,
+      dataFormat,
+      options: getOptionsFromDataType(dataFormat),
     };
   };
 
-  const createDatetimeOptions = (format: string): IDatetimeColumnOptions => {
-    return {
-      range: {
-        min: null,
-        max: null,
-      },
-      format,
-    };
-  };
-
-  const createDefaultOptions = (): IDefaultColumnOptions => {
-    return {};
+  const getOptionsFromDataType = (dataType: DATA_TYPE_VALUE) => {
+    return COLUMN_FORMAT_LIST.find((item) => item.value === dataType)!.options;
   };
 
   return (
