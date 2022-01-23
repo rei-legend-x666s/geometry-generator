@@ -36,11 +36,13 @@ const textFieldProps: TextFieldProps = {
 
 interface ColumnPropertiesFormProps {
   closeSelf: () => void;
+  openDialog: (handleClickOk: () => void, message: string) => void;
   editingDataSet: IDummyDataSet;
 }
 
 const ColumnPropertiesForm = ({
   closeSelf,
+  openDialog,
   editingDataSet,
 }: ColumnPropertiesFormProps) => {
   const {
@@ -68,7 +70,7 @@ const ColumnPropertiesForm = ({
   }, [editingDataSet]);
 
   const handleClickClose = () => {
-    closeSelf();
+    openDialog(closeSelf, "Do you want to close?.");
   };
 
   const handleClickGenerate = () => {
@@ -79,6 +81,7 @@ const ColumnPropertiesForm = ({
       Number(rowCountProps.value),
       seedProps.value ? Number(seedProps.value) : undefined
     );
+    closeSelf();
   };
 
   return (

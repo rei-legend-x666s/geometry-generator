@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import ColumnPropertiesForm from "../components/Home/ColumnPropertiesForm";
 import DataSetList from "../components/Home/DataSetList";
+import ConfirmDialog from "../components/utils/ConfirmDialog";
 import CustomHead from "../components/utils/Head";
 import ColumnPropertyProvider from "../context/ColumnPropertyProvider";
 import { useDummyData } from "../context/DummyDataProvider";
@@ -13,6 +14,9 @@ const Home: NextPage = () => {
   const { isEditing, editingDataSetId, setEditingDataSetId } = useGlobalData();
   const { dummyDataSetList } = useDummyData();
   const [editingDataSet, setEditingDataSet] = useState<IDummyDataSet>();
+  const [showDialog, setShowDialog] = useState(false);
+  const [okAction, setOkAction] = useState<() => () => void>(() => () => {});
+  const [dialogMessage, setDialogMessage] = useState<string>("");
 
   useEffect(() => {
     setEditingDataSet(dummyDataSetList.find((d) => d.id === editingDataSetId));
@@ -20,6 +24,15 @@ const Home: NextPage = () => {
 
   const closeColumnPropertiesForm = () => {
     setEditingDataSetId("");
+  };
+
+  const openDialog = (handleClickOk: () => void, message: string) => {
+    setDialogMessage(message);
+    setOkAction(() => () => {
+      handleClickOk();
+      setShowDialog(false);
+    });
+    setShowDialog(true);
   };
 
   return (
@@ -31,15 +44,23 @@ const Home: NextPage = () => {
             {editingDataSet && (
               <ColumnPropertiesForm
                 closeSelf={closeColumnPropertiesForm}
+                openDialog={openDialog}
                 editingDataSet={editingDataSet}
               />
             )}
           </Grid>
         </Collapse>
         <Grid item xs={12} sx={{ p: 2 }}>
-          <DataSetList />
+          <DataSetList openDialog={openDialog} />
         </Grid>
       </Box>
+      <ConfirmDialog
+        open={showDialog}
+        title="Begin edited"
+        message={dialogMessage}
+        handleOk={okAction}
+        handleCancel={() => setShowDialog(false)}
+      />
     </ColumnPropertyProvider>
   );
 };

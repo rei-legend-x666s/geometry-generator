@@ -24,8 +24,12 @@ import { IDummyDataSet } from "../../types/general";
 import ConfirmDialog from "../utils/ConfirmDialog";
 import Title from "../utils/Title";
 
-const DataSetList = () => {
-  const { setEditingDataSetId } = useGlobalData();
+interface DataSetListProps {
+  openDialog: (handleClickOk: () => void, message: string) => void;
+}
+
+const DataSetList = ({ openDialog }: DataSetListProps) => {
+  const { isEditing, setEditingDataSetId } = useGlobalData();
   const {
     dummyDataSet,
     dummyDataSetList,
@@ -38,14 +42,19 @@ const DataSetList = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [targetingId, setTargetingId] = useState<string | null>(null);
 
-  const handleClickAddNewDataSet = () => {
-    const newDataSet = createNewDataSet();
-    addDataSet(newDataSet);
-    setEditingDataSetId(newDataSet.id);
+  const setDataSet = (id?: string) => {
+    if (!id) {
+      const newDataSet = createNewDataSet();
+      addDataSet(newDataSet);
+      id = newDataSet.id;
+    }
+    setEditingDataSetId(id);
   };
 
-  const handleClickEditDataSet = (id: string) => () => {
-    setEditingDataSetId(id);
+  const handleClickAddEditDataSet = (id?: string) => () => {
+    isEditing
+      ? openDialog(() => setDataSet(id), "Do you want to switch datasets?")
+      : setDataSet(id);
   };
 
   const handleClickDelete = (id: string) => () => {
@@ -92,7 +101,7 @@ const DataSetList = () => {
               <TableCell colSpan={6}>
                 <IconButton
                   aria-label="new data set"
-                  onClick={handleClickAddNewDataSet}
+                  onClick={handleClickAddEditDataSet()}
                   sx={{ backgroundColor: "#f9f9f9", mx: 1 }}
                 >
                   <Add color="primary" />
@@ -137,7 +146,7 @@ const DataSetList = () => {
                   <IconButton
                     aria-label="edit"
                     color="primary"
-                    onClick={handleClickEditDataSet(dataSet.id)}
+                    onClick={handleClickAddEditDataSet(dataSet.id)}
                   >
                     <Edit />
                   </IconButton>
