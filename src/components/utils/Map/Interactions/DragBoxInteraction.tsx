@@ -18,7 +18,6 @@ const DragBoxInteraction = () => {
     });
     map.addInteraction(dragBox);
     setDragBox(dragBox);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 
   useEffect(() => {
@@ -37,7 +36,6 @@ const DragBoxInteraction = () => {
       source.clear();
       source.addFeature(boxFeature);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dragBox]);
 
   return null;

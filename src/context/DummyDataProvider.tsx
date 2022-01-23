@@ -36,7 +36,6 @@ const DummyDataProvider = ({ children }: IProviderProps) => {
   useEffect(() => {
     if (!worker) return;
     worker.onmessage = onWorkerMessage;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [worker]);
 
   // @ts-ignore

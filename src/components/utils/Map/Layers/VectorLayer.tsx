@@ -31,7 +31,6 @@ const VectorLayer = ({ source, id, style, zIndex = 0 }: VectorLayerProps) => {
         map.removeLayer(vectorLayer);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
   return null;
 };

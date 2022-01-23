@@ -28,19 +28,16 @@ const Map = ({ children, zoom, center, extent, height }: MapProps) => {
     mapObject.setTarget(mapRef.current);
     setMap(mapObject);
     return () => mapObject.setTarget(undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (!map) return;
     map.getView().setZoom(zoom);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom]);
 
   useEffect(() => {
     if (!map) return;
     map.getView().setCenter(center);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [center]);
 
   useEffect(() => {
