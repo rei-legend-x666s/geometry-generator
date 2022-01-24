@@ -1,5 +1,6 @@
 import { Map } from "@mui/icons-material";
 import { Grid, IconButton, InputLabel } from "@mui/material";
+import dynamic from "next/dynamic";
 import { Extent } from "ol/extent";
 import OLVectorLayer from "ol/layer/Vector";
 import { transform } from "ol/proj";
@@ -9,8 +10,11 @@ import { useColumnProperty } from "../../context/ColumnPropertyProvider";
 import { useMap } from "../../context/MapProvider";
 import { IColumnProperties, IGisColumnOptions } from "../../types/general";
 import LatLongRangeSlider from "./LatLongRangeSlider";
-import RangeInputMapDialog from "./RangeInputMapDialog";
 import "ol/ol.css";
+
+const RangeInputMapDialog = dynamic(() => import("./RangeInputMapDialog"), {
+  ssr: false,
+});
 
 interface GisColumnOptionsProps {
   columnProps: IColumnProperties;
