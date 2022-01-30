@@ -3,7 +3,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { Grid, TextField } from "@mui/material";
 import { ChangeEvent } from "react";
 import { useColumnProperty } from "../../context/ColumnPropertyProvider";
-import { isDatetimeOptions } from "../../functions/customTypeGaurd";
+import { isDatetimeColumnOptions } from "../../functions/customTypeGaurd";
 import { IColumnProperties } from "../../types/general";
 import DateRangePickerWrapper from "./DateRangePickerWrapprer";
 
@@ -15,7 +15,7 @@ const DatetimeOptions = ({ columnProps }: IDatetimeOptions) => {
   const { id, options } = columnProps;
   const { setOptions } = useColumnProperty();
 
-  if (!isDatetimeOptions(options)) return null;
+  if (!isDatetimeColumnOptions(options)) return null;
 
   const handleChangeFormat = (event: ChangeEvent<HTMLInputElement>) => {
     setOptions(id, {

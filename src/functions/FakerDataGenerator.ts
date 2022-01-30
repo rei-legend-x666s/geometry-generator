@@ -1,14 +1,9 @@
 import * as fakerLib from "@faker-js/faker";
 import { format } from "date-fns";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
-import {
-  IColumnProperties,
-  IDatetimeColumnOptions,
-  IGisColumnOptions,
-  Locale,
-} from "../types/general";
+import { ColumnOptions, IColumnProperties, Locale } from "../types/general";
 import RandomGenerator from "./RandomGenerator";
-import { isDatetimeOptions } from "./customTypeGaurd";
+import { isDatetimeColumnOptions, isGisColumnOptions } from "./customTypeGaurd";
 
 export interface IFakerDataGeneratorOptions {
   seed: number;
@@ -38,85 +33,69 @@ class FakerDataGenerator {
 
   createLastName = () => this.faker.name.lastName();
 
-  createLatitude = (
-    randomNumber: number,
-    { range: { xMinMax } }: IGisColumnOptions
-  ) => {
-    return this.shiftRange(randomNumber, xMinMax[0], xMinMax[1]);
+  createLatitude = (options: ColumnOptions) => {
+    if (!isGisColumnOptions(options)) return null;
+    const {
+      range: { xMinMax },
+    } = options;
+    const [min, max] = xMinMax;
+    return this.shiftRange(this.randomGenerator.next(), min, max);
   };
 
-  createLongitude = (
-    randomNumber: number,
-    { range: { yMinMax } }: IGisColumnOptions
-  ) => {
-    return this.shiftRange(randomNumber, yMinMax[0], yMinMax[1]);
+  createLongitude = (options: ColumnOptions) => {
+    if (!isGisColumnOptions(options)) return null;
+    const {
+      range: { yMinMax },
+    } = options;
+    const [min, max] = yMinMax;
+    return this.shiftRange(this.randomGenerator.next(), min, max);
   };
 
-  createDatetime = (options: IDatetimeColumnOptions) => {
+  createDatetime = (options: ColumnOptions) => {
+    if (!isDatetimeColumnOptions(options)) return null;
     const {
       range: { min, max },
+      format: optFormat,
     } = options;
     const opt = {
       min: min ? min : undefined,
       max: max ? max : undefined,
     };
     const date = this.faker.datatype.datetime(opt);
-    return format(date, options.format);
+    return format(date, optFormat);
   };
 
-  createPointGeometry = (
-    xRandomNumber: number,
-    yRandomNumber: number,
-    { range }: IGisColumnOptions
-  ) => {
-    const { xMinMax, yMinMax } = range;
+  createPointGeometry = (options: ColumnOptions) => {
+    if (!isGisColumnOptions(options)) return null;
+    const {
+      range: { xMinMax, yMinMax },
+    } = options;
+    const [xRandomNumber, yRandomNumber] = this.createRandomNumber(2);
     const latitude = this.shiftRange(xRandomNumber, xMinMax[0], xMinMax[1]);
-
     const longitude = this.shiftRange(yRandomNumber, yMinMax[0], yMinMax[1]);
     return [latitude, longitude];
+  };
+
+  createRandomNumber = (count: number) => {
+    return [...Array(count)].map((_) => this.randomGenerator.next());
   };
 
   shiftRange = (num: number, min: number, max: number) =>
     min + Math.abs(num) * (max - min);
 
+  private dataCreateFunctions = {
+    [DATA_TYPE_VALUE.NONE]: () => null,
+    [DATA_TYPE_VALUE.LAST_NAME]: this.createLastName,
+    [DATA_TYPE_VALUE.FIRST_NAME]: this.createFirstName,
+    [DATA_TYPE_VALUE.LATITUDE]: this.createLatitude,
+    [DATA_TYPE_VALUE.LONGITUDE]: this.createLongitude,
+    [DATA_TYPE_VALUE.GEOMETRY_POINT]: this.createPointGeometry,
+    [DATA_TYPE_VALUE.DATETIME]: this.createDatetime,
+    [DATA_TYPE_VALUE.DATE]: this.createDatetime,
+  };
+
   createData = ({ dataFormat, options }: IColumnProperties) => {
-    let data = null;
-    switch (dataFormat) {
-      case DATA_TYPE_VALUE.NONE:
-        data = null;
-        break;
-      case DATA_TYPE_VALUE.FIRST_NAME:
-        data = this.createFirstName();
-        break;
-      case DATA_TYPE_VALUE.LAST_NAME:
-        data = this.createLastName();
-        break;
-      case DATA_TYPE_VALUE.LATITUDE:
-        data = this.createLatitude(
-          this.randomGenerator.next(),
-          options as IGisColumnOptions
-        );
-        break;
-      case DATA_TYPE_VALUE.LONGITUDE:
-        data = this.createLongitude(
-          this.randomGenerator.next(),
-          options as IGisColumnOptions
-        );
-        break;
-      case DATA_TYPE_VALUE.GEOMETRY_POINT:
-        data = this.createPointGeometry(
-          this.randomGenerator.next(),
-          this.randomGenerator.next(),
-          options as IGisColumnOptions
-        );
-        break;
-      case DATA_TYPE_VALUE.DATETIME:
-      case DATA_TYPE_VALUE.DATE:
-        if (!isDatetimeOptions(options)) return null;
-        data = this.createDatetime(options);
-        break;
-    }
-    return data;
+    return this.dataCreateFunctions[dataFormat](options);
   };
 }
 
