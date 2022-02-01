@@ -7,6 +7,7 @@ import {
 } from "@mui/icons-material";
 import {
   IconButton,
+  LinearProgress,
   Paper,
   Table,
   TableBody,
@@ -16,7 +17,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { useState } from "react";
-import { DATE_FORMAT } from "../../constants/utils";
+import { DATASET_STATUS, DATE_FORMAT } from "../../constants/utils";
 import { useDummyData } from "../../context/DummyDataProvider";
 import { useGlobalData } from "../../context/GlobalDataProvider";
 import { formatFromISO } from "../../functions/dateUtils";
@@ -138,7 +139,13 @@ const DataSetList = ({ openDialog }: DataSetListProps) => {
                 <TableCell align="center">
                   {dataSet.name || <em>No Name</em>}
                 </TableCell>
-                <TableCell align="center">{dataSet.records.length}</TableCell>
+                <TableCell align="center">
+                  {dataSet.status === DATASET_STATUS.CREATING ? (
+                    <LinearProgress />
+                  ) : (
+                    dataSet.records.length
+                  )}
+                </TableCell>
                 <TableCell align="center">
                   {formatFromISO(dataSet.createdAt, DATE_FORMAT.TYPE2)}
                 </TableCell>

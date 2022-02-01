@@ -9,6 +9,14 @@ export const NEW_LINE_CODE = {
   },
 };
 
+export const DATASET_STATUS = {
+  NOT_CREATED: "not_created",
+  FINISHED: "finished",
+  CREATING: "creating",
+};
+
+export type DATASET_STATUS = typeof DATASET_STATUS[keyof typeof DATASET_STATUS];
+
 export const CRS_VALUE = {
   EPSG_3857: "EPSG:3857",
   EPSG_4326: "EPSG:4326",
