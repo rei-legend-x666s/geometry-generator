@@ -30,7 +30,7 @@ interface DataSetListProps {
 }
 
 const DataSetList = ({ openDialog }: DataSetListProps) => {
-  const { isEditing, setEditingDataSetId } = useGlobalData();
+  const { isEditing, editingDataSetId, setEditingDataSetId } = useGlobalData();
   const {
     dummyDataSet,
     dummyDataSetList,
@@ -153,6 +153,7 @@ const DataSetList = ({ openDialog }: DataSetListProps) => {
                   <IconButton
                     aria-label="edit"
                     color="primary"
+                    disabled={editingDataSetId === dataSet.id}
                     onClick={handleClickAddEditDataSet(dataSet.id)}
                   >
                     <Edit />
@@ -162,6 +163,7 @@ const DataSetList = ({ openDialog }: DataSetListProps) => {
                   <IconButton
                     aria-label="delete"
                     color="primary"
+                    disabled={editingDataSetId === dataSet.id}
                     onClick={handleClickDelete(dataSet.id)}
                   >
                     <Delete />
