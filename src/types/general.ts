@@ -2,7 +2,7 @@ import { SvgIconTypeMap } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { ReactNode } from "react";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
-import { CRS_VALUE } from "../constants/utils";
+import { CRS_VALUE, DATASET_STATUS } from "../constants/utils";
 
 export interface IProviderProps {
   children: ReactNode;
@@ -69,6 +69,7 @@ export interface IDummyDataSet extends IDataSetInputForm {
   id: string;
   records: IDummyDataRecord[];
   createdAt: string;
+  status: DATASET_STATUS;
 }
 
 export interface IDataSetInputForm {

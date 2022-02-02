@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { createContext, useContext, useEffect, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
-import { DATE_FORMAT } from "../constants/utils";
+import { DATASET_STATUS, DATE_FORMAT } from "../constants/utils";
 import { createInitColumnProperty } from "../functions/columnUtils";
 import {
   IDataSetInputForm,
@@ -62,7 +62,13 @@ const DummyDataProvider = ({ children }: IProviderProps) => {
     dummyDataRecords: IDummyDataRecord[]
   ) => {
     const newDummyDataSetList = dummyDataSetList.map((dataSet) =>
-      dataSet.id === id ? { ...dataSet, records: dummyDataRecords } : dataSet
+      dataSet.id === id
+        ? {
+            ...dataSet,
+            records: dummyDataRecords,
+            status: DATASET_STATUS.FINISHED,
+          }
+        : dataSet
     );
     setDummyDataSetList(newDummyDataSetList);
   };
@@ -77,6 +83,7 @@ const DummyDataProvider = ({ children }: IProviderProps) => {
         records: [],
         seed: undefined,
         createdAt: format(new Date(), DATE_FORMAT.TYPE1),
+        status: DATASET_STATUS.NOT_CREATED,
       },
       dataSet
     );
@@ -95,7 +102,12 @@ const DummyDataProvider = ({ children }: IProviderProps) => {
     dataSetInputForm: IDataSetInputForm
   ) => {
     const updatedDataSetList = dummyDataSetList.map((dataSet) =>
-      dataSet.id === id ? Object.assign(dataSet, dataSetInputForm) : dataSet
+      dataSet.id === id
+        ? Object.assign(dataSet, {
+            status: DATASET_STATUS.CREATING,
+            ...dataSetInputForm,
+          })
+        : dataSet
     );
     setDummyDataSetList(updatedDataSetList);
     const worker = createDataWorker(id, dataSetInputForm);
