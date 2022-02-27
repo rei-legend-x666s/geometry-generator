@@ -6,8 +6,6 @@ import {
 import { createInitColumnProperty } from "../functions/columnUtils";
 import {
   IColumnProperties,
-  IDatetimeColumnOptions,
-  IGisColumnOptions,
   IProviderProps,
   ColumnOptions,
 } from "../types/general";
@@ -18,10 +16,7 @@ type ColumnPropertyContextProps = {
   addColumnProperties: () => void;
   deleteColumnProperties: (id: string) => void;
   clearColumnProperties: () => void;
-  setOptions: (
-    id: string,
-    options: IGisColumnOptions | IDatetimeColumnOptions
-  ) => void;
+  setOptions: (id: string, options: ColumnOptions) => void;
   handleChangeColumnProperty: (
     id: string,
     prop: keyof IColumnProperties

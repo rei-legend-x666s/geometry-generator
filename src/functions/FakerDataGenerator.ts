@@ -3,7 +3,11 @@ import { format } from "date-fns";
 import { DATA_TYPE_VALUE } from "../constants/column-format";
 import { ColumnOptions, IColumnProperties, Locale } from "../types/general";
 import RandomGenerator from "./RandomGenerator";
-import { isDatetimeColumnOptions, isGisColumnOptions } from "./customTypeGaurd";
+import {
+  isDatetimeColumnOptions,
+  isGisColumnOptions,
+  isNumberRangeColumnOptions,
+} from "./customTypeGaurd";
 
 export interface IFakerDataGeneratorOptions {
   seed: number;
@@ -76,6 +80,18 @@ class FakerDataGenerator {
     return [latitude, longitude];
   };
 
+  createNumber = (options: ColumnOptions) => {
+    if (!isNumberRangeColumnOptions(options)) return null;
+    const {
+      range: { min, max },
+    } = options;
+    const opt = {
+      min: min ? min : undefined,
+      max: max ? max : undefined,
+    };
+    return this.faker.datatype.number(opt);
+  };
+
   createRandomNumber = (count: number) => {
     return [...Array(count)].map((_) => this.randomGenerator.next());
   };
@@ -92,6 +108,7 @@ class FakerDataGenerator {
     [DATA_TYPE_VALUE.GEOMETRY_POINT]: this.createPointGeometry,
     [DATA_TYPE_VALUE.DATETIME]: this.createDatetime,
     [DATA_TYPE_VALUE.DATE]: this.createDatetime,
+    [DATA_TYPE_VALUE.NUMBER]: this.createNumber,
   };
 
   createData = ({ dataFormat, options }: IColumnProperties) => {

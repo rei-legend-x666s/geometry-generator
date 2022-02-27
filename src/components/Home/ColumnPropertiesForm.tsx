@@ -15,7 +15,10 @@ import {
   Toolbar,
 } from "@mui/material";
 import { useEffect } from "react";
-import { INTEGER, NATURAL_NUMBER } from "../../constants/regex-constant";
+import {
+  NATURAL_NUMBER_WITH_ZERO,
+  NATURAL_NUMBER,
+} from "../../constants/regex-constant";
 import { useColumnProperty } from "../../context/ColumnPropertyProvider";
 import { useDummyData } from "../../context/DummyDataProvider";
 import { useInput } from "../../hooks/hooks";
@@ -60,7 +63,9 @@ const ColumnPropertiesForm = ({
   const [rowCountProps, resetRowCount] = useInput("1", (value) =>
     NATURAL_NUMBER.test(value)
   );
-  const [seedProps, resetSeed] = useInput("", (value) => INTEGER.test(value));
+  const [seedProps, resetSeed] = useInput("", (value) =>
+    NATURAL_NUMBER_WITH_ZERO.test(value)
+  );
 
   useEffect(() => {
     setColumnProps(editingDataSet.columnPropsList);

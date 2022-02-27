@@ -24,17 +24,21 @@ export interface IColumnProperties {
 export type ColumnOptions =
   | IDefaultColumnOptions
   | IDatetimeColumnOptions
-  | IGisColumnOptions;
+  | IGisColumnOptions
+  | INumberRangeColumnOptions;
 
 export interface IDefaultColumnOptions {
   formatter?: (data: DummyData) => string;
 }
 
-export interface IDatetimeColumnOptions {
+export interface INumberRangeColumnOptions {
   range: {
     min: number | null;
     max: number | null;
   };
+}
+
+export interface IDatetimeColumnOptions extends INumberRangeColumnOptions {
   format: string;
 }
 

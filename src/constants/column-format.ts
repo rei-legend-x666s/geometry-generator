@@ -11,6 +11,7 @@ export const DATA_TYPE_VALUE = {
   GEOMETRY_POINT: 5,
   DATETIME: 6,
   DATE: 7,
+  NUMBER: 8,
 } as const;
 
 export type DATA_TYPE_VALUE =
@@ -26,7 +27,7 @@ const GIS_COLUMN_COMMON_OPTION = {
   crs: CRS_VALUE.EPSG_4326,
 };
 
-const DATETIME_COLUMN_COMMON_OPTION = {
+const NUMBER_RANGE_COLUMN_COMMON_OPTION = {
   range: {
     min: null,
     max: null,
@@ -71,7 +72,7 @@ export const COLUMN_FORMAT_LIST: IColumnDataFormat[] = [
     label: "Datetime",
     value: DATA_TYPE_VALUE.DATETIME,
     options: {
-      ...DATETIME_COLUMN_COMMON_OPTION,
+      ...NUMBER_RANGE_COLUMN_COMMON_OPTION,
       format: DATE_FORMAT.TYPE2,
     },
   },
@@ -79,8 +80,13 @@ export const COLUMN_FORMAT_LIST: IColumnDataFormat[] = [
     label: "Date",
     value: DATA_TYPE_VALUE.DATE,
     options: {
-      ...DATETIME_COLUMN_COMMON_OPTION,
+      ...NUMBER_RANGE_COLUMN_COMMON_OPTION,
       format: DATE_FORMAT.TYPE3,
     },
+  },
+  {
+    label: "Number",
+    value: DATA_TYPE_VALUE.NUMBER,
+    options: NUMBER_RANGE_COLUMN_COMMON_OPTION,
   },
 ];

@@ -17,6 +17,7 @@ import { IColumnProperties } from "../../types/general";
 import DatetimeOptions from "./DatetimeOptions";
 import GisColumnOptions from "./GisColumnOptions";
 import LatLongRangeSlider from "./LatLongRangeSlider";
+import NumberOptions from "./NumberOptions";
 
 interface ColumnPropsTableRowProps {
   idx: number;
@@ -55,6 +56,8 @@ const ColumnPropsTableRow = ({
       case DATA_TYPE_VALUE.DATETIME:
       case DATA_TYPE_VALUE.DATE:
         return <DatetimeOptions columnProps={columnProperty} />;
+      case DATA_TYPE_VALUE.NUMBER:
+        return <NumberOptions columnProps={columnProperty} />;
     }
   };
 
