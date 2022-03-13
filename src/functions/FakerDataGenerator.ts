@@ -7,6 +7,7 @@ import {
   isDatetimeColumnOptions,
   isGisColumnOptions,
   isNumberRangeColumnOptions,
+  isStringsColumnOptions,
 } from "./customTypeGaurd";
 
 export interface IFakerDataGeneratorOptions {
@@ -92,6 +93,18 @@ class FakerDataGenerator {
     return this.faker.datatype.number(opt);
   };
 
+  createString = (options: ColumnOptions) => {
+    if (!isStringsColumnOptions(options)) return null;
+    const minIndex = 0;
+    const maxIndex = options.strings.length - 1;
+    const opt = {
+      min: minIndex,
+      max: maxIndex,
+    };
+    const index = this.faker.datatype.number(opt);
+    return options.strings[index];
+  };
+
   createRandomNumber = (count: number) => {
     return [...Array(count)].map((_) => this.randomGenerator.next());
   };
@@ -109,6 +122,7 @@ class FakerDataGenerator {
     [DATA_TYPE_VALUE.DATETIME]: this.createDatetime,
     [DATA_TYPE_VALUE.DATE]: this.createDatetime,
     [DATA_TYPE_VALUE.NUMBER]: this.createNumber,
+    [DATA_TYPE_VALUE.STRING]: this.createString,
   };
 
   createData = ({ dataFormat, options }: IColumnProperties) => {

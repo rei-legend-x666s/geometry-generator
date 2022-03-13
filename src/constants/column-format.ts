@@ -12,6 +12,7 @@ export const DATA_TYPE_VALUE = {
   DATETIME: 6,
   DATE: 7,
   NUMBER: 8,
+  STRING: 9,
 } as const;
 
 export type DATA_TYPE_VALUE =
@@ -32,6 +33,10 @@ const NUMBER_RANGE_COLUMN_COMMON_OPTION = {
     min: null,
     max: null,
   },
+};
+
+const STRING_OPTION = {
+  strings: [],
 };
 
 export const COLUMN_FORMAT_LIST: IColumnDataFormat[] = [
@@ -88,5 +93,10 @@ export const COLUMN_FORMAT_LIST: IColumnDataFormat[] = [
     label: "Number",
     value: DATA_TYPE_VALUE.NUMBER,
     options: NUMBER_RANGE_COLUMN_COMMON_OPTION,
+  },
+  {
+    label: "String",
+    value: DATA_TYPE_VALUE.STRING,
+    options: STRING_OPTION,
   },
 ];

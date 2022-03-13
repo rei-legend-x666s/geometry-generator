@@ -2,6 +2,7 @@ import {
   IDatetimeColumnOptions,
   IGisColumnOptions,
   INumberRangeColumnOptions,
+  IStringOptions,
 } from "../types/general";
 
 const isGisColumnOptions = (options: any): options is IGisColumnOptions => {
@@ -20,6 +21,10 @@ const isNumberRangeColumnOptions = (
   return hasNumberRangeProperty(options);
 };
 
+const isStringsColumnOptions = (options: any): options is IStringOptions => {
+  return options.strings !== undefined;
+};
+
 const hasNumberRangeProperty = (options: any) => {
   return options.range !== undefined && options.range.min !== undefined;
 };
@@ -28,4 +33,5 @@ export {
   isGisColumnOptions,
   isDatetimeColumnOptions,
   isNumberRangeColumnOptions,
+  isStringsColumnOptions,
 };

@@ -25,7 +25,8 @@ export type ColumnOptions =
   | IDefaultColumnOptions
   | IDatetimeColumnOptions
   | IGisColumnOptions
-  | INumberRangeColumnOptions;
+  | INumberRangeColumnOptions
+  | IStringOptions;
 
 export interface IDefaultColumnOptions {
   formatter?: (data: DummyData) => string;
@@ -49,6 +50,10 @@ export interface IGisColumnOptions {
   };
   formatter?: (data: DummyData) => string;
   crs: CRS_VALUE;
+}
+
+export interface IStringOptions {
+  strings: string[];
 }
 
 export interface IColumnDataFormat {
