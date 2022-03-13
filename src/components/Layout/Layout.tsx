@@ -8,7 +8,7 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -31,7 +31,7 @@ const Layout = ({ children }: LayoutProps) => {
           overflow: "auto",
         }}
       >
-        <Container maxWidth="lg" sx={{ mt: 12, mb: 4 }}>
+        <Container maxWidth={false} sx={{ mt: 11 }}>
           <Grid container spacing={3}>
             {children}
           </Grid>
